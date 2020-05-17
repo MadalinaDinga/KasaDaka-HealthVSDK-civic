@@ -153,6 +153,7 @@ MEDIAFILES_LOCATION = SFTP_STORAGE_HOST + '/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
 STATICFILES_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
 MEDIA_URL = "http://" + SFTP_HOST + "/" + SFTP_USER + "/django/"
+STATIC_URL = "http://" + SFTP_HOST + "/" + SFTP_USER + "/django/"
 
 import dj_database_url
 
