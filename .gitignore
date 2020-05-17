@@ -95,3 +95,12 @@ ENV/
 #vsdk/settings.py
 *.DS_Store
 .vscode
+sqldiff.exe
+sqlite3.exe
+sqlite3_analyzer.exe
+.idea/
+vsdk/static/
+schemaSpy_5.0.0.jar
+
+latest.dump
+uploads
