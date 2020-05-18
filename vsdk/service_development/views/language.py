@@ -5,6 +5,8 @@ from django.http.response import HttpResponseRedirect
 
 from ..models import CallSession, Language
 
+import logging
+logger = logging.getLogger("mada")
 
 class LanguageSelection(TemplateView):
 
@@ -47,8 +49,10 @@ class LanguageSelection(TemplateView):
         if 'redirect_url' in request.POST:
             redirect_url = request.POST['redirect_url']
         else:
+            logger.error("Incorrect request, redirect_url not set")
             raise ValueError('Incorrect request, redirect_url not set')
         if 'language_id' not in request.POST:
+            logger.error("Incorrect request, language ID not set")
             raise ValueError('Incorrect request, language ID not set')
 
         session = get_object_or_404(CallSession, pk=session_id)
