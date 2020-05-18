@@ -53,10 +53,9 @@
             <goto next="{{ url }}"/>
            </if>
           </filled>
- </field>
+    </field>
 
 {% endif %}
-
 
 <block>
     <prompt>
@@ -64,9 +63,6 @@
     </prompt>
     <goto next="{{ redirect_url }}" />
 </block>
-
-
-
 
 </form>
 

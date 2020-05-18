@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.http.response import HttpResponseRedirect
 
-from ..models import CallSession, VoiceService, Language
+from ..models import CallSession, Language
+
 
 class LanguageSelection(TemplateView):
 
@@ -11,14 +12,14 @@ class LanguageSelection(TemplateView):
         languages = session.service.supported_languages.all()
 
         # This is the redirect URL to POST the language selected
-        redirect_url_POST = reverse('service-development:language-selection', args = [session.id])
+        redirect_url_POST = reverse('service-development:language-selection', args=[session.id])
 
         # This is the redirect URL for *AFTER* the language selection process
-        pass_on_variables = {'redirect_url' : redirect_url}
+        pass_on_variables = {'redirect_url': redirect_url}
 
-        context = {'languages' : languages,
-                   'redirect_url' : redirect_url_POST,
-                   'pass_on_variables' : pass_on_variables
+        context = {'languages': languages,
+                   'redirect_url': redirect_url_POST,
+                   'pass_on_variables': pass_on_variables
                    }
         return render(request, 'language_selection.xml', context, content_type='text/xml')
 
@@ -26,8 +27,7 @@ class LanguageSelection(TemplateView):
         """
         Asks the user to select one of the supported languages.
         """
-        session = get_object_or_404(CallSession, pk = session_id)
-        voice_service = session.service
+        session = get_object_or_404(CallSession, pk=session_id)
         if 'redirect_url' in request.GET:
             redirect_url = request.GET['redirect_url']
         return self.render_language_selection_form(request, session, redirect_url)
@@ -38,13 +38,14 @@ class LanguageSelection(TemplateView):
         """
         if 'redirect_url' in request.POST:
             redirect_url = request.POST['redirect_url']
-        else: raise ValueError('Incorrect request, redirect_url not set')
+        else:
+            raise ValueError('Incorrect request, redirect_url not set')
         if 'language_id' not in request.POST:
             raise ValueError('Incorrect request, language ID not set')
 
-        session = get_object_or_404(CallSession, pk = session_id)
+        session = get_object_or_404(CallSession, pk=session_id)
         voice_service = session.service
-        language = get_object_or_404(Language, pk = request.POST['language_id'])
+        language = get_object_or_404(Language, pk=request.POST['language_id'])
 
         session._language = language
         session.save()
@@ -52,3 +53,4 @@ class LanguageSelection(TemplateView):
         session.record_step(None, "Language selected, %s" % language.name)
 
         return HttpResponseRedirect(redirect_url)
+

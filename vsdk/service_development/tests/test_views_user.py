@@ -37,8 +37,6 @@ class TestUserRegistration(TestCase):
         #assert response.context == ""
         assert ET.fromstring(response.content), 'Should produce valid XML'
 
-
-
     def test_user_registration_post_request(self):
         number_of_users_pre = len(KasaDakaUser.objects.all())
 

@@ -28,14 +28,13 @@
     {% for option_redirect in choice_options_redirect_urls %}
       {% if forloop.counter == 1 %}
       <if cond="choice == '{{ forloop.counter }}'">
-	      {% comment %} TODO hoe doe je een url opzoeken als je nog niet weet welke class object je naar refereert? {% endcomment %}
+	      {% comment %} TODO how do you look up a url if you don't know yet which class object you are referring to?  {% endcomment %}
       <goto next="{{ option_redirect }}"/>
       {% else %}
       <elseif cond="choice == '{{ forloop.counter }}'" />
       <goto next="{{ option_redirect }}"/>
       {% endif %}
     {% endfor %}
-
 
     <else/>
     </if>
