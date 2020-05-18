@@ -198,11 +198,14 @@ class Language(models.Model):
             'post_choice_option': self.post_choice_option,
             'username_voice_label': self.username,
             'password_voice_label': self.password,
-            'auth_voice_label': self.authenticate,
+            'auth_voice_label': self.pre_choice_option,
             'next_voice_label': self.next,
         }
         for k, v in interface_voice_labels.items():
             interface_voice_labels[k] = v.get_voice_fragment_url(self)
+        import logging
+        logger = logging.getLogger("mada")
+        logger.debug("DICT {}".format(interface_voice_labels))
         return interface_voice_labels
 
 
