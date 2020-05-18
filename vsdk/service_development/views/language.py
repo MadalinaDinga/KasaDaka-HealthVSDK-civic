@@ -27,10 +27,18 @@ class LanguageSelection(TemplateView):
         """
         Asks the user to select one of the supported languages.
         """
-        session = get_object_or_404(CallSession, pk=session_id)
-        if 'redirect_url' in request.GET:
-            redirect_url = request.GET['redirect_url']
-        return self.render_language_selection_form(request, session, redirect_url)
+        import logging
+        logger = logging.getLogger("mada")
+        logger.debug("REQUEST {}".format(request))
+        logger.debug("Session ID {}".format(session_id))
+        try:
+            session = get_object_or_404(CallSession, pk=session_id)
+            if 'redirect_url' in request.GET:
+                redirect_url = request.GET['redirect_url']
+            return self.render_language_selection_form(request, session, redirect_url)
+        except Exception as ex:
+            logger.error(ex)
+            return None
 
     def post(self, request, session_id):
         """
