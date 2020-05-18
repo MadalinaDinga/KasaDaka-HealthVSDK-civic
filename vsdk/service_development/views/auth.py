@@ -13,25 +13,27 @@ logger = logging.getLogger("mada")
 class UserAuthentication(TemplateView):
 
     def render_auth_form(self, request, session):
-        languages = session.service.supported_languages.all()
-
-        # This is the redirect URL to POST the username and password selected
-        redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
-
-        # This is the redirect URL for *AFTER* the username and password input process
-        pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.id])}
-        language = session.language
-
-        context = {
-                   'redirect_url': redirect_url_POST,
-                   'pass_on_variables': pass_on_variables,
-                   'language': language,
-                   }
-        logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
-
         try:
+            languages = session.service.supported_languages.all()
+
+            # This is the redirect URL to POST the username and password selected
+            redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
+
+            # This is the redirect URL for *AFTER* the username and password input process
+            pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.id])}
+            language = session.language
+
+            context = {
+                       'redirect_url': redirect_url_POST,
+                       'pass_on_variables': pass_on_variables,
+                       'language': language,
+                       }
+            logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
+
+
             return render(request, 'auth.xml', context, content_type='text/xml')
         except Exception as ex:
+            logger.error("EXCEPYIasd")
             logger.error(ex)
 
     def get(self, request, session_id):
