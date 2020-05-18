@@ -203,9 +203,7 @@ class Language(models.Model):
         }
         for k, v in interface_voice_labels.items():
             interface_voice_labels[k] = v.get_voice_fragment_url(self)
-        import logging
-        logger = logging.getLogger("mada")
-        logger.debug("DICT {}".format(interface_voice_labels))
+
         return interface_voice_labels
 
 

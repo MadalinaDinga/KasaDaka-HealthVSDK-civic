@@ -29,8 +29,7 @@ class LanguageSelection(TemplateView):
         """
         Asks the user to select one of the supported languages.
         """
-        import logging
-        logger = logging.getLogger("mada")
+
         logger.debug("REQUEST {}".format(request))
         logger.debug("Session ID {}".format(session_id))
         try:
@@ -43,26 +42,31 @@ class LanguageSelection(TemplateView):
             return None
 
     def post(self, request, session_id):
-        """
-        Saves the chosen language to the session
-        """
-        if 'redirect_url' in request.POST:
-            redirect_url = request.POST['redirect_url']
-        else:
-            logger.error("Incorrect request, redirect_url not set")
-            raise ValueError('Incorrect request, redirect_url not set')
-        if 'language_id' not in request.POST:
-            logger.error("Incorrect request, language ID not set")
-            raise ValueError('Incorrect request, language ID not set')
+        try:
+            """
+            Saves the chosen language to the session
+            """
+            if 'redirect_url' in request.POST:
+                redirect_url = request.POST['redirect_url']
+            else:
+                logger.error("Incorrect request, redirect_url not set")
+                raise ValueError('Incorrect request, redirect_url not set')
+            if 'language_id' not in request.POST:
+                logger.error("Incorrect request, language ID not set")
+                raise ValueError('Incorrect request, language ID not set')
 
-        session = get_object_or_404(CallSession, pk=session_id)
-        voice_service = session.service
-        language = get_object_or_404(Language, pk=request.POST['language_id'])
+            session = get_object_or_404(CallSession, pk=session_id)
+            voice_service = session.service
+            language = get_object_or_404(Language, pk=request.POST['language_id'])
 
-        session._language = language
-        session.save()
+            session._language = language
+            session.save()
 
-        session.record_step(None, "Language selected, %s" % language.name)
+            session.record_step(None, "Language selected, %s" % language.name)
 
-        return HttpResponseRedirect(redirect_url)
+            return HttpResponseRedirect(redirect_url)
+        except Exception as ex:
+            logger.error("POST")
+            logger.error(ex)
+            return None
 
