@@ -203,7 +203,7 @@ LOGGING = {
         },
         'mada': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'propagate': True,
         },
     }

@@ -195,5 +195,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'mada': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
