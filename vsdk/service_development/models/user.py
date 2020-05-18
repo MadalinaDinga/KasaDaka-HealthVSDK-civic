@@ -18,8 +18,8 @@ class KasaDakaUser(models.Model):
     modification_date = models.DateTimeField(_('Date last modified'), auto_now=True)
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
     service = models.ForeignKey(VoiceService, on_delete=models.CASCADE)
-    username = models.CharField(_('Username'), max_length=100, blank=False)
-    _password = models.CharField(_('Password'), max_length=100, blank=False, validators=[MinLengthValidator(6)])
+    username = models.CharField(_('Username'), max_length=100, blank=True, null=True)
+    _password = models.CharField(_('Password'), max_length=100, blank=True, null=True, validators=[MinLengthValidator(6)])
 
     class Meta:
         verbose_name = _('KasaDaka User')
