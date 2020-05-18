@@ -23,6 +23,8 @@ class LanguageSelection(TemplateView):
                    'redirect_url': redirect_url_POST,
                    'pass_on_variables': pass_on_variables
                    }
+        logger.error("CONTEXT render")
+        logger.error(context)
         return render(request, 'language_selection.xml', context, content_type='text/xml')
 
     def get(self, request, session_id):

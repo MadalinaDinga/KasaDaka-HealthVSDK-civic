@@ -14,8 +14,6 @@ class UserAuthentication(TemplateView):
 
     def render_auth_form(self, request, session):
         try:
-            languages = session.service.supported_languages.all()
-
             # This is the redirect URL to POST the username and password selected
             redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
 

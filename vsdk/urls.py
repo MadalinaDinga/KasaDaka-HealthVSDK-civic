@@ -23,7 +23,7 @@ admin.site.site_header = _("KasaDaka Voice Services")
 import logging
 
 logger = logging.getLogger("mada")
-logger.debug("YPYP")
+
 
 urlpatterns = [
     url(r'^', admin.site.urls),
