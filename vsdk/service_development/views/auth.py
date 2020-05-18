@@ -18,7 +18,7 @@ class UserAuthentication(TemplateView):
             redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
 
             # This is the redirect URL for *AFTER* the username and password input process
-            pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.id])}
+            pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.service.id, session.id])}
             language = session.language
 
             context = {
@@ -27,7 +27,6 @@ class UserAuthentication(TemplateView):
                        'language': language,
                        }
             logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
-
 
             return render(request, 'auth.xml', context, content_type='text/xml')
         except Exception as ex:
