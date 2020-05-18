@@ -33,6 +33,9 @@ def voice_service_start(request, voice_service_id, session_id = None):
     session_id = session.id
 
     if voice_service.registration_required and not caller_id:
+        import logging
+        logger = logging.getLogger("mada")
+        logger.error('This service requires authentication, but authentication is not possible, because there is no callerID!')
         raise ValueError(
             'This service requires authentication, but authentication is not possible, because there is no callerID!')
 
