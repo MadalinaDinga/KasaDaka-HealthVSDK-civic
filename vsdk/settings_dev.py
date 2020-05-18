@@ -129,7 +129,6 @@ STATICFILES_DIRS = (
 
 # Media files config
 # Absolute filesystem path to the directory that will hold user-uploaded files
-MEDIA_ROOT = os.path.join(SITE_ROOT, 'uploads')
 
 # SFTP credentials
 SFTP_PASS = 'T:5^4[nd7SP?B2v3'

@@ -17,16 +17,14 @@ class UserAuthentication(TemplateView):
 
         # This is the redirect URL for *AFTER* the username and password input process
         pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.id])}
+        language = session.language
 
-        context = {'languages': languages,
+        context = {
                    'redirect_url': redirect_url_POST,
-                   'pass_on_variables': pass_on_variables
+                   'pass_on_variables': pass_on_variables,
+                   'language': language,
                    }
         return render(request, 'auth.xml', context, content_type='text/xml')
-
-    def user_check_credentials(self):
-        # Return to start of voice service
-        return redirect('service-development:voice-service', voice_service_id=session.service.id, session_id=session.id)
 
     def get(self, request, session_id):
         """
