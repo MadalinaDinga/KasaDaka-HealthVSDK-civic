@@ -1,3 +1,4 @@
+import logging
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -5,6 +6,8 @@ from django.views.generic import TemplateView
 from ..models.user import lookup_kasadaka_user_by_username, KasaDakaUser
 
 from ..models import CallSession, Language
+
+logger = logging.getLogger("mada")
 
 
 class UserAuthentication(TemplateView):
@@ -24,6 +27,7 @@ class UserAuthentication(TemplateView):
                    'pass_on_variables': pass_on_variables,
                    'language': language,
                    }
+        logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
         return render(request, 'auth.xml', context, content_type='text/xml')
 
     def get(self, request, session_id):

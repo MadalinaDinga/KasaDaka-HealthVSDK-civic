@@ -201,5 +201,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'mada': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
     }
 }
