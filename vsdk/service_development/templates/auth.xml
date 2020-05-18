@@ -7,7 +7,7 @@
 
 	<field name="username_field" type="number">
 		<prompt>
-            Hello!
+             <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
 		</prompt>
 
        {# when there has been input, save the corresponding username in the given variable and then ask for the password #}
@@ -38,7 +38,10 @@
 <form id="submit_form">
     <block>
         {# include the variables in the dictionary 'pass_on_variables' as POST variables #}
-        <submit next="{{ redirect_url }}" enctype="multipart/form-data" method="post" namelist="username pass"/>
+        {% for key, value in pass_on_variables.items %}
+        <assign name="{{ key }}" expr="'{{ value }}'"/>
+        {% endfor %}
+        <submit next="{{ redirect_url }}" method="post" namelist="username pass {% for key, value in pass_on_variables.items %} {{ key }} {% endfor %}"/>
     </block>
 </form>
 
