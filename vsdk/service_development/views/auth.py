@@ -28,7 +28,11 @@ class UserAuthentication(TemplateView):
                    'language': language,
                    }
         logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
-        return render(request, 'auth.xml', context, content_type='text/xml')
+        logger.debug(language.get_interface_voice_label_url_dict.auth_voice_label)
+        try:
+            return render(request, 'auth.xml', context, content_type='text/xml')
+        except Exception as ex:
+            logger.error(ex)
 
     def get(self, request, session_id):
         """
