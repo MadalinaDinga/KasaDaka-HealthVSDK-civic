@@ -20,6 +20,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 admin.site.site_header = _("KasaDaka Voice Services")
+import logging
+
+logger = logging.getLogger("mada")
+logger.debug("YPYP")
 
 urlpatterns = [
     url(r'^', admin.site.urls),

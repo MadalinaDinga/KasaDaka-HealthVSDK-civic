@@ -7,7 +7,7 @@
 
 	<field name="username_field" type="number">
 		<prompt>
-            <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
+            Hello!
 		</prompt>
 
        {# when there has been input, save the corresponding username in the given variable and then ask for the password #}

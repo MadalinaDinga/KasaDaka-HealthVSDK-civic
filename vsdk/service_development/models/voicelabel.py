@@ -190,6 +190,9 @@ class Language(models.Model):
         Returns a dictionary containing all URLs of Voice
         Fragments of the hardcoded interface audio fragments.
         """
+        import logging
+        logger = logging.getLogger("mada")
+        logger.debug("SELF {}".format(self))
         interface_voice_labels = {
             'voice_label': self.voice_label,
             'error_message': self.error_message,
