@@ -28,7 +28,8 @@ class UserAuthentication(TemplateView):
                        }
             logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
 
-            return render(request, 'auth.xml', context, content_type='text/xml')
+            # return render(request, 'auth.xml', context, content_type='text/xml')
+            return render(request, 'language_selection.xml', context, content_type='text/xml')
         except Exception as ex:
             logger.error("EXCEPYIasd")
             logger.error(ex)
