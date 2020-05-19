@@ -37,6 +37,7 @@ def voice_service_start_with_credentials_auth(request, voice_service, session=No
 
     # If the language for this session can not be determined,
     # redirect the user to language selection for this session only.
+    logger.debug("Session language before {}".format(session.language))
     if not session.language:
         # After selection of language, return to start of voice service.
         logger.debug("Setting language")
@@ -44,16 +45,15 @@ def voice_service_start_with_credentials_auth(request, voice_service, session=No
         return base.redirect_add_get_parameters('service-development:language-selection',
                                                 session.id,
                                                 redirect_url=return_url)
-    logger.debug("Session language {}".format(session.language))
+    logger.debug("Session language after {}".format(session.language))
 
-
-def auth_user(session=None):
     logger.debug("Authenticated user {}".format(session.user))
-    # Authenticate user - link the session to the user when given (valid) credentials
-    return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
-    return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
-                                            session.id,
-                                            redirect_url=return_url)
+    if not session.user:
+        # Authenticate user - link the session to the user when given (valid) credentials
+        return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
+        return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
+                                                session.id,
+                                                redirect_url=return_url)
 
 
 def voice_service_with_callerID_auth(request, voice_service, session=None, caller_id=None):
@@ -114,7 +114,6 @@ def voice_service_start(request, voice_service_id, session_id=None):
     if voice_service.is_pass_based_auth:
         logger.debug("Password-based authentication is set")
         voice_service_start_with_credentials_auth(request, voice_service, session, caller_id)
-        auth_user(session)
     else:
         logger.debug("CallerID-based authentication is set")
         voice_service_with_callerID_auth(request, voice_service, session, caller_id)
