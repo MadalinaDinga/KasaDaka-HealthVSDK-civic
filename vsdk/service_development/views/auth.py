@@ -12,13 +12,13 @@ logger = logging.getLogger("mada")
 
 class UserAuthentication(TemplateView):
 
-    def render_auth_form(self, request, session):
+    def render_auth_form(self, request, session, redirect_url):
         try:
             # This is the redirect URL to POST the username and password selected
             redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
 
             # This is the redirect URL for *AFTER* the username and password input process
-            pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.service.id, session.id])}
+            pass_on_variables =  {'redirect_url': redirect_url}
             language = session.language
 
             context = {
@@ -38,8 +38,14 @@ class UserAuthentication(TemplateView):
         """
         Asks the user to type his username and password (digits only).
         """
-        session = get_object_or_404(CallSession, pk=session_id)
-        return self.render_auth_form(request, session)
+        try:
+            session = get_object_or_404(CallSession, pk=session_id)
+            if 'redirect_url' in request.GET:
+                redirect_url = request.GET['redirect_url']
+            return self.render_auth_form(request, session, redirect_url)
+        except Exception as ex:
+            logger.error(ex)
+            return None
 
     def post(self, request, session_id):
         """

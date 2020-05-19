@@ -50,7 +50,8 @@ def voice_service_start(request, voice_service_id, session_id = None):
 
     # Authenticate user - link the session to a user using the given (validated) credentials
     if not session.user:
-        return redirect('service-development:kasadaka-user-auth', session.id)
+        return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
+        return redirect('service-development:kasadaka-user-auth', session.id, redirect_url=return_url)
 
     return base.redirect_to_voice_service_element(voice_service.start_element, session)
 
