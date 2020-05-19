@@ -1,39 +1,6 @@
 {% extends "base.xml" %}
 {% block content%}
-<form id="auth_form">
-    <prompt>
-            <audio src="{{ language.get_interface_voice_label_url_dict.auth_voice_label }}"/>
-    </prompt>
 
-	<field name="username_field" type="number">
-		<prompt>
-             <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
-		</prompt>
-
-       {# when there has been input, save the corresponding username in the given variable and then ask for the password #}
-       <filled>
-            <prompt>
-                <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
-		    </prompt>
-            <assign name="username" expr="username_field"/>
-      </filled>
-    </field>
-
-    <field name="password_field" type="number">
-            <prompt>
-                <audio src="{{ language.get_interface_voice_label_url_dict.password_voice_label }}"/>
-            </prompt>
-
-       {# when there has been input, save the corresponding password in the given variable #}
-       <filled>
-            <prompt>
-                <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
-		    </prompt>
-            <assign name="pass" expr="password_field"/>
-        <goto next="#submit_form"/>
-      </filled>
-     </field>
-</form>
 
 <form id="submit_form">
     <block>
