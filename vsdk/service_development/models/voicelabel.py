@@ -155,7 +155,7 @@ class Language(models.Model):
         verbose_name = _('Language')
 
     def __str__(self):
-        return '%s (%s)' % (self.name, self.code)
+        return f"LANGUAGE get_interface_voice_label_url_dict {self.get_interface_voice_label_url_dict} "
 
     @property
     def get_description_voice_label_url(self):
