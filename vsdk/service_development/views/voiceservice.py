@@ -83,6 +83,7 @@ def select_session_language(voice_service, session=None, caller_id=None):
 def password_based_auth(session):
     # Authenticates a user and links the session to the user if auth was successful (valid credentials were given)
     logger.debug("Authenticated user {}".format(session.user))
+    logger.debug("Current session information {}".format(session))
     return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
     return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
                                             session.id,

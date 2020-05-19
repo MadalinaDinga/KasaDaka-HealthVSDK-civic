@@ -13,26 +13,20 @@ logger = logging.getLogger("mada")
 class UserAuthentication(TemplateView):
 
     def render_auth_form(self, request, session, redirect_url):
-        try:
-            # This is the redirect URL to POST the username and password selected
-            redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
+        # This is the redirect URL to POST the username and password selected
+        redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
 
-            # This is the redirect URL for *AFTER* the username and password input process
-            pass_on_variables = {'redirect_url': redirect_url}
-            language = session.language
+        # This is the redirect URL for *AFTER* the username and password input process
+        pass_on_variables = {'redirect_url': redirect_url}
+        language = session.language
 
-            context = {
-                'redirect_url': redirect_url_POST,
-                'pass_on_variables': pass_on_variables,
-                'language': language,
-            }
-            logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
-            logger.debug("auth.xml")
-            return render(request, 'auth.xml', context, content_type='text/xml')
-
-        except Exception as ex:
-            logger.error("EXCEPYIasd")
-            logger.error(ex)
+        context = {'language': language,
+                   'redirect_url': redirect_url_POST,
+                   'pass_on_variables': pass_on_variables
+                   }
+        logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
+        logger.debug("Render auth.xml")
+        return render(request, 'auth.xml', context, content_type='text/xml')
 
     def get(self, request, session_id):
         """
@@ -40,14 +34,11 @@ class UserAuthentication(TemplateView):
         """
         logger.debug("Request {} - Session id {}".format(request, session_id))
         logger.debug("Asking for credentials")
-        try:
-            session = get_object_or_404(CallSession, pk=session_id)
-            if 'redirect_url' in request.GET:
-                redirect_url = request.GET['redirect_url']
-            return self.render_auth_form(request, session, redirect_url)
-        except Exception as ex:
-            logger.error(ex)
-            return None
+
+        session = get_object_or_404(CallSession, pk=session_id)
+        if 'redirect_url' in request.GET:
+            redirect_url = request.GET['redirect_url']
+        return self.render_auth_form(request, session, redirect_url)
 
     def post(self, request, session_id):
         """

@@ -25,8 +25,8 @@ class LanguageSelection(TemplateView):
                    'redirect_url': redirect_url_POST,
                    'pass_on_variables': pass_on_variables
                    }
-        logger.error("CONTEXT render")
-        logger.error(context)
+        logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
+        logger.debug("Render language_selection.xml")
         return render(request, 'language_selection.xml', context, content_type='text/xml')
 
     def get(self, request, session_id):
@@ -36,14 +36,11 @@ class LanguageSelection(TemplateView):
 
         logger.debug("REQUEST {}".format(request))
         logger.debug("Session ID {}".format(session_id))
-        try:
-            session = get_object_or_404(CallSession, pk=session_id)
-            if 'redirect_url' in request.GET:
-                redirect_url = request.GET['redirect_url']
-            return self.render_language_selection_form(request, session, redirect_url)
-        except Exception as ex:
-            logger.error(ex)
-            return None
+
+        session = get_object_or_404(CallSession, pk=session_id)
+        if 'redirect_url' in request.GET:
+            redirect_url = request.GET['redirect_url']
+        return self.render_language_selection_form(request, session, redirect_url)
 
     def post(self, request, session_id):
         try:
