@@ -64,8 +64,9 @@ def voice_service_with_callerID_auth(request, voice_service, session=None, calle
         voice service.
     """
     logger.debug(
-        "Password-based auth started for Voice service {} - Session {} - CallerID {}".format(voice_service, session,
-                                                                                             caller_id))
+        "CallerID-based authentication started for Voice service {} - Session {} - CallerID {}".format(voice_service,
+                                                                                                       session,
+                                                                                                       caller_id))
     # if not voice_service.active:
     # TODO give a nicer error message
     # raise Http404()
@@ -110,7 +111,7 @@ def voice_service_start(request, voice_service_id, session_id=None):
     session = lookup_or_create_session(voice_service, session_id, caller_id)
     logger.debug("Caller ID {} - Session {}".format(caller_id, session))
 
-    if voice_service.registration_required and voice_service.is_pass_based_auth:
+    if voice_service.is_pass_based_auth:
         logger.debug("Password-based authentication is set")
         voice_service_start_with_credentials_auth(request, voice_service, session, caller_id)
         auth_user(session)
