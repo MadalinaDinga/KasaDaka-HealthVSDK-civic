@@ -47,13 +47,12 @@ def voice_service_start_with_credentials_auth(request, voice_service, session=No
     logger.debug("Session language {}".format(session.language))
 
     # Authenticate user - link the session to a user using the given (validated) credentials
-    if not session.user:
-        logger.debug("Authenticating user")
-        return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
-        return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
-                                                session.id,
-                                                redirect_url=return_url)
-    logger.debug("Auth user {}".format(session.user))
+
+    logger.debug("Authenticating user")
+    return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
+    return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
+                                            session.id,
+                                            redirect_url=return_url)
 
 
 def voice_service_with_callerID_auth(request, voice_service, session=None, caller_id=None):
@@ -117,4 +116,5 @@ def voice_service_start(request, voice_service_id, session_id=None):
         logger.debug("CallerID-based authentication is set")
         voice_service_with_callerID_auth(request, voice_service, session, caller_id)
 
+    logger.debug("Redirecting to start element {}".format(voice_service.start_element))
     return base.redirect_to_voice_service_element(voice_service.start_element, session)
