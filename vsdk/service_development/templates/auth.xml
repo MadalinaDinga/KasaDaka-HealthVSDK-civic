@@ -4,7 +4,7 @@
 <form id="submit_form">
 <block>
 
-	<submit next="{{ redirect_url }}" method="post"/>
+	<submit next="{{ redirect_url }}" method="post" namelist="{% for key, value in pass_on_variables.items %} {{ key }} {% endfor %}"/>
 </block>
 </form>
 
