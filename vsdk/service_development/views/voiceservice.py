@@ -39,8 +39,7 @@ def voice_service_start(request, voice_service_id, session_id=None):
         logger.debug("Start authentication process if required or preferred")
         if voice_service.registration_preferred_or_required:
             logger.debug("User authentication started")
-            #return password_based_auth(session)
-            return select_session_language(voice_service, session, caller_id)
+            return password_based_auth(session)
         logger.debug("User authentication finished")
     else:
         logger.debug("CallerID-based authentication is set")

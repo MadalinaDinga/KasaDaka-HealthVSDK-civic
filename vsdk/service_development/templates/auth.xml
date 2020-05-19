@@ -15,7 +15,7 @@
             <prompt>
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
 		    </prompt>
-            <assign name="username" expr="username_field"/>
+            <assign name="username" expr="'{{username_field}}'"/>
       </filled>
     </field>
 
@@ -29,7 +29,7 @@
             <prompt>
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
 		    </prompt>
-            <assign name="pass" expr="password_field"/>
+            <assign name="pass" expr="'{{password_field}}'"/>
         <goto next="#submit_form"/>
       </filled>
      </field>
