@@ -45,13 +45,15 @@ def voice_service_start(request, voice_service_id, session_id=None):
         logger.debug("CallerID-based authentication is set")
         if voice_service.registration_preferred_or_required:
             logger.debug("User authentication started")
-            return callerID_auth(voice_service, session, caller_id)
+            redirect_url = callerID_auth(voice_service, session, caller_id)
+            if redirect is not None:
+                return redirect_url
         logger.debug("User authentication finished")
 
         # If not set, select language
         if not session.language:
             logger.debug("Perform language selection")
-            return select_session_language(voice_service, session, caller_id)
+            select_session_language(voice_service, session, caller_id)
         logger.debug("Session language is {}".format(session.language))
 
     logger.debug("Redirecting to start element {}".format(voice_service.start_element))
@@ -67,7 +69,7 @@ def select_session_language(voice_service, session=None, caller_id=None):
     """
     logger.debug(
         "Language selection started for Voice service {} - Session {} - CallerID {}".format(voice_service, session,
-                                                                                             caller_id))
+                                                                                            caller_id))
 
     # Redirect the user to language selection for this session only.
     # Make sure to return to start of voice service after selection of language
@@ -112,8 +114,8 @@ def callerID_auth(voice_service, session=None, caller_id=None):
         if found_user:
             session.link_to_user(found_user)
             logger.debug("Session user {}".format(session.user))
+            return None
         # If there is no user with this caller_id and registration of users is preferred or required, redirect to registration
         else:
             logger.debug("Register caller id {}".format(caller_id))
             return redirect('service-development:user-registration', session.id)
-
