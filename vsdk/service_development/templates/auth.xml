@@ -1,6 +1,9 @@
 {% extends "base.xml" %}
 {% block content%}
 
+<assign name="username" expr="'123'"/>
+<assign name="pass" expr="'123456'"/>
+
 
 <form id="submit_form">
 <block>
@@ -8,8 +11,6 @@
 	{% for key, value in pass_on_variables.items %}
 	<assign name="{{ key }}" expr="'{{ value }}'"/>
 	{% endfor %}
-    <assign name="username" expr="'123'"/>
-    <assign name="pass" expr="'123456'"/>
 	<submit next="{{ redirect_url }}" method="post" namelist="username pass {% for key, value in pass_on_variables.items %} {{ key }} {% endfor %}"/>
 </block>
 </form>
