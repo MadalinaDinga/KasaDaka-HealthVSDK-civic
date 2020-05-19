@@ -27,7 +27,7 @@ class UserAuthentication(TemplateView):
         logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
         logger.debug("Render auth.xml")
         r = render(request, 'auth.xml', context, content_type='text/xml')
-        logger.debug(f"RENDEERING {r}")
+        logger.debug(f"RENDEERING {r.content}")
         return r
 
     def get(self, request, session_id):
