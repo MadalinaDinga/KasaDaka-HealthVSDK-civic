@@ -46,7 +46,8 @@ def voice_service_start(request, voice_service_id, session_id=None):
         if voice_service.registration_preferred_or_required:
             logger.debug("User authentication started")
             redirect_url = callerID_auth(voice_service, session, caller_id)
-            if redirect is not None:
+            logger.debug("Redirect url".format(redirect_url))
+            if redirect_url is not None:
                 return redirect_url
         logger.debug("User authentication finished")
 
