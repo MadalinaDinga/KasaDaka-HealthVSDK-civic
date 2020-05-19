@@ -55,8 +55,6 @@ def voice_service_start_with_credentials_auth(request, voice_service, session=No
                                                 redirect_url=return_url)
     logger.debug("Auth user {}".format(session.user))
 
-    return base.redirect_to_voice_service_element(voice_service.start_element, session)
-
 
 def voice_service_with_callerID_auth(request, voice_service, session=None, caller_id=None):
     """
@@ -103,8 +101,6 @@ def voice_service_with_callerID_auth(request, voice_service, session=None, calle
                                                 redirect_url=return_url)
     logger.debug("Session language {}".format(session.language))
 
-    return base.redirect_to_voice_service_element(voice_service.start_element, session)
-
 
 def voice_service_start(request, voice_service_id, session_id=None):
     logger.debug("Voice service with id {} - Request {} - Session id {}".format(voice_service_id, request, session_id))
@@ -120,3 +116,5 @@ def voice_service_start(request, voice_service_id, session_id=None):
     else:
         logger.debug("CallerID-based authentication is set")
         voice_service_with_callerID_auth(request, voice_service, session, caller_id)
+
+    return base.redirect_to_voice_service_element(voice_service.start_element, session)
