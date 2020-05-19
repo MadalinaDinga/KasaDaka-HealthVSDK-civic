@@ -30,7 +30,6 @@
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
 		    </prompt>
             <assign name="pass" expr="password_field"/>
-        <goto next="#submit_form"/>
       </filled>
      </field>
 </form>
