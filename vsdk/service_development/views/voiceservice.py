@@ -1,4 +1,6 @@
 import logging
+
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from ..models import VoiceService, lookup_or_create_session, lookup_kasadaka_user_by_caller_id
@@ -15,7 +17,48 @@ def get_caller_id_from_GET_request(request):
     return None
 
 
-def voice_service_start_with_credentials_auth(request, voice_service, session=None, caller_id=None):
+def voice_service_start(request, voice_service_id, session_id=None):
+    logger.debug("Voice service with id {} - Request {} - Session id {}".format(voice_service_id, request, session_id))
+    voice_service = get_object_or_404(VoiceService, pk=voice_service_id)
+
+    if not voice_service.active:
+        # TODO give a nicer error message
+        raise Http404("Inactive service")
+
+    caller_id = get_caller_id_from_GET_request(request)
+    session = lookup_or_create_session(voice_service, session_id, caller_id)
+    logger.debug("Caller ID {} - Session {}".format(caller_id, session))
+
+    if voice_service.is_pass_based_auth:
+
+        logger.debug("Password-based authentication is set")
+        if not session.language:
+            return select_session_language(voice_service, session, caller_id)
+        logger.debug("Session language {}".format(session.language))
+
+        logger.debug("Start authentication process if required or preferred")
+        if voice_service.registration_preferred_or_required:
+            logger.debug("User authentication started")
+            return password_based_auth(session)
+        logger.debug("User authentication finished")
+    else:
+        logger.debug("CallerID-based authentication is set")
+        if voice_service.registration_preferred_or_required:
+            logger.debug("User authentication started")
+            return callerID_auth(voice_service, session, caller_id)
+        logger.debug("User authentication finished")
+
+        # If not set, select language
+        if not session.language:
+            logger.debug("Perform language selection")
+            return select_session_language(voice_service, session, caller_id)
+        logger.debug("Session language is {}".format(session.language))
+
+    logger.debug("Redirecting to start element {}".format(voice_service.start_element))
+    return base.redirect_to_voice_service_element(voice_service.start_element, session)
+
+
+def select_session_language(voice_service, session=None, caller_id=None):
     """
         Starting point for a voice service. Looks up user (redirects to registation
         otherwise), creates session, (redirects to language selection).
@@ -23,40 +66,27 @@ def voice_service_start_with_credentials_auth(request, voice_service, session=No
         voice service.
     """
     logger.debug(
-        "Password-based auth started for Voice service {} - Session {} - CallerID {}".format(voice_service, session,
+        "Language selection started for Voice service {} - Session {} - CallerID {}".format(voice_service, session,
                                                                                              caller_id))
-    # if not voice_service.active:
-    # TODO give a nicer error message
-    # raise Http404()
 
-    if voice_service.registration_required and not caller_id:
-        logger.error(
-            'This service requires authentication, but authentication is not possible, because there is no callerID!')
-        raise ValueError(
-            'This service requires authentication, but authentication is not possible, because there is no callerID!')
+    # Redirect the user to language selection for this session only.
+    # Make sure to return to start of voice service after selection of language
+    return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
+    return base.redirect_add_get_parameters('service-development:language-selection',
+                                            session.id,
+                                            redirect_url=return_url)
 
-    # If the language for this session can not be determined,
-    # redirect the user to language selection for this session only.
-    logger.debug("Session language before {}".format(session.language))
-    if not session.language:
-        # After selection of language, return to start of voice service.
-        logger.debug("Setting language")
-        return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
-        return base.redirect_add_get_parameters('service-development:language-selection',
-                                                session.id,
-                                                redirect_url=return_url)
-    logger.debug("Session language after {}".format(session.language))
 
+def password_based_auth(session):
+    # Authenticates a user and links the session to the user if auth was successful (valid credentials were given)
     logger.debug("Authenticated user {}".format(session.user))
-    if not session.user:
-        # Authenticate user - link the session to the user when given (valid) credentials
-        return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
-        return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
-                                                session.id,
-                                                redirect_url=return_url)
+    return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
+    return base.redirect_add_get_parameters('service-development:kasadaka-user-auth',
+                                            session.id,
+                                            redirect_url=return_url)
 
 
-def voice_service_with_callerID_auth(request, voice_service, session=None, caller_id=None):
+def callerID_auth(voice_service, session=None, caller_id=None):
     """
         Starting point for a voice service. Looks up user (redirects to registation
         otherwise), creates session, (redirects to language selection).
@@ -67,9 +97,12 @@ def voice_service_with_callerID_auth(request, voice_service, session=None, calle
         "CallerID-based authentication started for Voice service {} - Session {} - CallerID {}".format(voice_service,
                                                                                                        session,
                                                                                                        caller_id))
-    # if not voice_service.active:
-    # TODO give a nicer error message
-    # raise Http404()
+    # If there is no caller_id provided, and user registration is required for this service,
+    # throw an error
+    if voice_service.registration_required and not caller_id:
+        # TODO make this into a nice audio error
+        raise ValueError(
+            'This service requires registration, but registration is not possible, because there is no callerID!')
 
     # If the session is not yet linked to an user, try to look up the user by
     # Caller ID, and link it to the session. If the user cannot be found,
@@ -79,44 +112,8 @@ def voice_service_with_callerID_auth(request, voice_service, session=None, calle
         if found_user:
             session.link_to_user(found_user)
             logger.debug("Session user {}".format(session.user))
-
         # If there is no user with this caller_id and registration of users is preferred or required, redirect to registration
-        elif voice_service.registration_preferred_or_required:
-            return redirect('service-development:user-registration',
-                            session.id)
+        else:
+            logger.debug("Register caller id {}".format(caller_id))
+            return redirect('service-development:user-registration', session.id)
 
-    # If there is no caller_id provided, and user registration is required for this service,
-    # throw an error
-    elif voice_service.registration_required and not caller_id:
-        # TODO make this into a nice audio error
-        raise ValueError(
-            'This service requires registration, but registration is not possible, because there is no callerID!')
-
-    # If the language for this session can not be determined,
-    # redirect the user to language selection for this session only.
-    if not session.language:
-        # After selection of language, return to start of voice service.
-        return_url = reverse('service-development:voice-service', args=[session.service.id, session.id])
-        return base.redirect_add_get_parameters('service-development:language-selection',
-                                                session.id,
-                                                redirect_url=return_url)
-    logger.debug("Session language {}".format(session.language))
-
-
-def voice_service_start(request, voice_service_id, session_id=None):
-    logger.debug("Voice service with id {} - Request {} - Session id {}".format(voice_service_id, request, session_id))
-    voice_service = get_object_or_404(VoiceService, pk=voice_service_id)
-
-    caller_id = get_caller_id_from_GET_request(request)
-    session = lookup_or_create_session(voice_service, session_id, caller_id)
-    logger.debug("Caller ID {} - Session {}".format(caller_id, session))
-
-    if voice_service.is_pass_based_auth:
-        logger.debug("Password-based authentication is set")
-        voice_service_start_with_credentials_auth(request, voice_service, session, caller_id)
-    else:
-        logger.debug("CallerID-based authentication is set")
-        voice_service_with_callerID_auth(request, voice_service, session, caller_id)
-
-    logger.debug("Redirecting to start element {}".format(voice_service.start_element))
-    return base.redirect_to_voice_service_element(voice_service.start_element, session)
