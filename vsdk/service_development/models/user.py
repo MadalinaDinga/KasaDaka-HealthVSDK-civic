@@ -34,7 +34,7 @@ class KasaDakaUser(models.Model):
         If user credentials are not valid, return false.
         """
         is_pass_correct = check_password(password, self._password)
-        print(f"{username}/{self.username}, {service}/{self.service}, {is_pass_correct}, {password/make_password(password)}/{self._password}")
+        print(f"{username}/{self.username}, {service}/{self.service}, {is_pass_correct}, {password}/{make_password(password)}/{self._password}")
         return username == self.username and is_pass_correct and service == self.service
 
     def __str__(self):
