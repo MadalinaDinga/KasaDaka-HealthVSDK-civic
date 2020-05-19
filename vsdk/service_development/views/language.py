@@ -33,7 +33,6 @@ class LanguageSelection(TemplateView):
         """
         Asks the user to select one of the supported languages.
         """
-
         logger.debug("REQUEST {}".format(request))
         logger.debug("Session ID {}".format(session_id))
 
