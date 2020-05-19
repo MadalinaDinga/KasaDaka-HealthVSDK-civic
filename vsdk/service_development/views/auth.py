@@ -15,7 +15,7 @@ class UserAuthentication(TemplateView):
     def render_auth_form(self, request, session):
         try:
             # This is the redirect URL to POST the username and password selected
-            redirect_url_POST = reverse('service-development:language-selection', args=[session.id])
+            redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
 
             # This is the redirect URL for *AFTER* the username and password input process
             pass_on_variables = {'redirect_url': reverse('service-development:voice-service', args=[session.service.id, session.id])}
@@ -28,8 +28,8 @@ class UserAuthentication(TemplateView):
                        }
             logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
 
-            # return render(request, 'auth.xml', context, content_type='text/xml')
-            return render(request, 'language_selection.xml', context, content_type='text/xml')
+            return render(request, 'auth.xml', context, content_type='text/xml')
+
         except Exception as ex:
             logger.error("EXCEPYIasd")
             logger.error(ex)
