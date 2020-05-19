@@ -35,7 +35,7 @@ class KasaDakaUser(models.Model):
         """
         is_pass_correct = check_password(password, self._password)
         print(f"{username}/{self.username}, {service}/{self.service}, {is_pass_correct}, {password}/{make_password(password)}/{self._password}")
-        return username == self.username and is_pass_correct and service == self.service
+        return username == self.username and password == self._password and service == self.service
 
     def __str__(self):
         if not (self.first_name or self.last_name):
