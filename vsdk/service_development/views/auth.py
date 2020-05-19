@@ -27,7 +27,7 @@ class UserAuthentication(TemplateView):
                        'language': language,
                        }
             logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
-
+            logger.debug("auth.xml")
             return render(request, 'auth.xml', context, content_type='text/xml')
 
         except Exception as ex:
