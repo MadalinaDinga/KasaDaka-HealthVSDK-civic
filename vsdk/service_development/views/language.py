@@ -6,7 +6,9 @@ from django.http.response import HttpResponseRedirect
 from ..models import CallSession, Language
 
 import logging
+
 logger = logging.getLogger("mada")
+
 
 class LanguageSelection(TemplateView):
 
@@ -71,4 +73,3 @@ class LanguageSelection(TemplateView):
             logger.error("POST")
             logger.error(ex)
             return None
-
