@@ -54,7 +54,7 @@ def voice_service_start(request, voice_service_id, session_id=None):
         # If not set, select language
         if not session.language:
             logger.debug("Perform language selection")
-            select_session_language(voice_service, session, caller_id)
+            return select_session_language(voice_service, session, caller_id)
         logger.debug("Session language is {}".format(session.language))
 
     logger.debug("Redirecting to start element {}".format(voice_service.start_element))
