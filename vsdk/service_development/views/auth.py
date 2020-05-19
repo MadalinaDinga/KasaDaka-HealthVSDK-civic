@@ -76,7 +76,7 @@ class UserAuthentication(TemplateView):
             session.record_step(None, "Authentication failed - Invalid credentials, %s" % in_username)
             raise ValueError('Invalid credentials')
 
-        session.user = user.username
+        session.user = user
         session.save()
 
         session.record_step(None, "Authentication successful, %s" % in_username)
