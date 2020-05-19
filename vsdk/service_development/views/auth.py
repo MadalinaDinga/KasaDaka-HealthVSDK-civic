@@ -18,14 +18,14 @@ class UserAuthentication(TemplateView):
             redirect_url_POST = reverse('service-development:kasadaka-user-auth', args=[session.id])
 
             # This is the redirect URL for *AFTER* the username and password input process
-            pass_on_variables =  {'redirect_url': redirect_url}
+            pass_on_variables = {'redirect_url': redirect_url}
             language = session.language
 
             context = {
-                       'redirect_url': redirect_url_POST,
-                       'pass_on_variables': pass_on_variables,
-                       'language': language,
-                       }
+                'redirect_url': redirect_url_POST,
+                'pass_on_variables': pass_on_variables,
+                'language': language,
+            }
             logger.debug("Context {} - Request {} - Session {}".format(context, request, session))
             logger.debug("auth.xml")
             return render(request, 'auth.xml', context, content_type='text/xml')
@@ -38,6 +38,8 @@ class UserAuthentication(TemplateView):
         """
         Asks the user to type his username and password (digits only).
         """
+        logger.debug("Request {} - Session id {}".format(request, session_id))
+        logger.debug("Asking for credentials")
         try:
             session = get_object_or_404(CallSession, pk=session_id)
             if 'redirect_url' in request.GET:
@@ -53,6 +55,9 @@ class UserAuthentication(TemplateView):
         Saves the username to the current session, if authentication is valid
         Otherwise, retrieves authentication error
         """
+        logger.debug("Request {} - Session id {}".format(request, session_id))
+        logger.debug("Checking credentials")
+
         if 'redirect_url' in request.POST:
             redirect_url = request.POST['redirect_url']
         else:
@@ -83,5 +88,6 @@ class UserAuthentication(TemplateView):
 
         session.record_step(None, "Authentication successful, %s" % in_username)
 
+        logger.debug("Redirecting to {}".format(redirect_url))
         # Return to the start of voice service
-        return redirect('service-development:voice-service', voice_service_id=session.service.id, session_id=session_id)
+        return HttpResponseRedirect(redirect_url)
