@@ -6,10 +6,15 @@
         <prompt>
             <audio src="{{ language.get_interface_voice_label_url_dict.auth_voice_label }}"/>
         </prompt>
+
+        <assign name="username" expr="'123'"/>
+        <assign name="pass" expr="'123456'"/>
     </block>
 
-
     <field name="usernamefield">
+        <prompt>
+            <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
+        </prompt>
         <grammar xml:lang="en-US" root = "MYRULE" mode="dtmf">
           <rule id="MYRULE" scope = "public">
             <one-of>
@@ -24,12 +29,6 @@
             </prompt>
        </filled>
     </field>
-
-
-    <block>
-        <assign name="username" expr="'123'"/>
-        <assign name="pass" expr="'123456'"/>
-    </block>
 
     <!-- "filled" event for form -->
     <filled>
