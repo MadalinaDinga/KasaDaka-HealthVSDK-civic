@@ -22,17 +22,10 @@
        </filled>
     </field>
 
-    <field name="passfield">
+    <field name="passfield" type="digits">
         <prompt>
             <audio src="{{ language.get_interface_voice_label_url_dict.password_voice_label }}"/>
         </prompt>
-        <grammar xml:lang="en-US" root = "MYRULE2" mode="dtmf">
-          <rule id="MYRULE2" scope = "public">
-            <one-of>
-                <item>123456</item>
-            </one-of>
-           </rule>
-        </grammar>
         <filled>
             <prompt>
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
