@@ -8,6 +8,15 @@
         </prompt>
     </block>
 
+    <field name="usernamefield" type="number">
+       <filled>
+            <block>
+                <prompt>
+                    <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
+                </prompt>
+            </block>
+       </filled>
+    </field>
 
     <block>
         <assign name="username" expr="'123'"/>
