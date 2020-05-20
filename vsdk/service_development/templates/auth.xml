@@ -9,17 +9,11 @@
         </prompt>
     </block>
 
-    <field name="usernamefield">
+    <field name="usernamefield" type="digits">
         <prompt>
             <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
         </prompt>
-        <grammar xml:lang="en-US" root = "MYRULE" mode="dtmf">
-          <rule id="MYRULE" scope = "public">
-            <one-of>
-                <item>123</item>
-            </one-of>
-           </rule>
-        </grammar>
+
        <filled>
             <prompt>
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
