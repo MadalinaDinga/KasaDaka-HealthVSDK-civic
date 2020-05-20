@@ -13,12 +13,6 @@
                  <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
             </prompt>
 
-           {# when there has been input, save the corresponding username in the given variable and then ask for the password #}
-           <filled>
-                <prompt>
-                    <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
-                </prompt>
-          </filled>
         </field>
 
         <assign name="username" expr="'123'"/>
