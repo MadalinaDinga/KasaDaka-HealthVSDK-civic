@@ -71,12 +71,12 @@ class UserAuthentication(TemplateView):
         if user is None:
             session.record_step(None, "Authentication failed - No user associated to this service, %s" % in_username)
             return render(request, 'auth-fail.xml', content_type='text/xml')
-            raise ValueError('No user associated to this service')
+            # raise ValueError('No user associated to this service')
 
         if not user.is_valid_credentials(in_username, in_password, voice_service):
             session.record_step(None, "Authentication failed - Invalid credentials, %s" % in_username)
             return render(request, 'auth-fail.xml', content_type='text/xml')
-            raise ValueError('Invalid credentials')
+            # raise ValueError('Invalid credentials')
 
         session.user = user
         session.save()
