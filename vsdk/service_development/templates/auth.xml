@@ -7,9 +7,6 @@
         <prompt>
             <audio src="{{ language.get_interface_voice_label_url_dict.auth_voice_label }}"/>
         </prompt>
-
-        <assign name="username" expr="'123'"/>
-        <assign name="pass" expr="'123456'"/>
     </block>
 
     <field name="usernamefield">
@@ -20,7 +17,6 @@
           <rule id="MYRULE" scope = "public">
             <one-of>
                 <item>123</item>
-                <item>000</item>
             </one-of>
            </rule>
         </grammar>
@@ -28,6 +24,7 @@
             <prompt>
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
             </prompt>
+           <assign name="username" expr="usernamefield"/>
        </filled>
     </field>
 
@@ -46,6 +43,7 @@
             <prompt>
                 <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
             </prompt>
+            <assign name="pass" expr="passfield"/>
        </filled>
     </field>
 
