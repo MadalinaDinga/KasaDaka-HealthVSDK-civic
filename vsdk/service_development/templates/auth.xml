@@ -1,17 +1,17 @@
 {% extends "base.xml" %}
 {% block content%}
 
-
 <form id="submit_form">
-<block>
     <assign name="username" expr="'123'"/>
     <assign name="pass" expr="'123456'"/>
-	{# include the variables in the dictionary 'pass_on_variables' as POST variables #}
-	{% for key, value in pass_on_variables.items %}
-	<assign name="{{ key }}" expr="'{{ value }}'"/>
-	{% endfor %}
-	<submit next="{{ redirect_url }}" method="post" namelist="username pass {% for key, value in pass_on_variables.items %} {{ key }} {% endfor %}"/>
-</block>
+
+    <block>
+        {# include the variables in the dictionary 'pass_on_variables' as POST variables #}
+        {% for key, value in pass_on_variables.items %}
+        <assign name="{{ key }}" expr="'{{ value }}'"/>
+        {% endfor %}
+        <submit next="{{ redirect_url }}" method="post" namelist="username pass {% for key, value in pass_on_variables.items %} {{ key }} {% endfor %}"/>
+    </block>
 </form>
 
 {% endblock %}
