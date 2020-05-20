@@ -76,15 +76,18 @@ class UserAuthentication(TemplateView):
             language = session.language
             context = {'language': language}
             logger.debug("Render auth-fail.xml")
-            r = render(request, 'auth-fail.xml', context, content_type='text/xml')
-            logger.debug(f"RENDEERING {r.content}")
-            return r
+            return render(request, 'auth-fail.xml', context, content_type='text/xml')
 
         session.user = user
         session.save()
 
         session.record_step(None, "Authentication successful, %s" % in_username)
 
+        # Return to the auth-success page, which will redirect to the start of the voice service
         logger.debug("Redirecting to {}".format(redirect_url))
-        # Return to the start of voice service
-        return HttpResponseRedirect(redirect_url)
+        language = session.language
+        context = {'language': language,
+                   'redirect_url': redirect_url
+                   }
+        return render(request, 'auth-success.xml', context, content_type='text/xml')
+        # return HttpResponseRedirect(redirect_url)
