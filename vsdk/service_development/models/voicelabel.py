@@ -198,7 +198,7 @@ class Language(models.Model):
             'post_choice_option': self.post_choice_option,
             'username_voice_label': self.username,
             'password_voice_label': self.password,
-            'auth_voice_label': self.pre_choice_option,
+            'auth_voice_label': self.authenticate,
             'next_voice_label': self.next,
         }
         for k, v in interface_voice_labels.items():
