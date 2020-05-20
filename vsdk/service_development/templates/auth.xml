@@ -35,8 +35,8 @@
         <prompt>
             <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
         </prompt>
-        <grammar xml:lang="en-US" root = "MYRULE" mode="dtmf">
-          <rule id="MYRULE" scope = "public">
+        <grammar xml:lang="en-US" root = "MYRULE2" mode="dtmf">
+          <rule id="MYRULE2" scope = "public">
             <one-of>
                 <item>123</item>
                 <item>000</item>
