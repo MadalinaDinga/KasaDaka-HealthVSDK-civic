@@ -150,6 +150,20 @@ class Language(models.Model):
                              verbose_name='Next voice label',
                              related_name='next_voice_label',
                              help_text=_("Next form field"))
+    authfail = models.ForeignKey('VoiceLabel',
+                             null=True,
+                             blank=True,
+                             on_delete=models.PROTECT,
+                             verbose_name='Authentication fail label',
+                             related_name='authfail_label',
+                             help_text=_("Authentication failure message"))
+    authsuccess = models.ForeignKey('VoiceLabel',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.PROTECT,
+                                 verbose_name='Authentication success label',
+                                 related_name='authsuccess_label',
+                                 help_text=_("Authentication success message"))
 
     class Meta:
         verbose_name = _('Language')
@@ -200,6 +214,8 @@ class Language(models.Model):
             'password_voice_label': self.password,
             'auth_voice_label': self.authenticate,
             'next_voice_label': self.next,
+            'authfail_label': self.authfail,
+            'authsuccess_label': self.authsuccess
         }
         for k, v in interface_voice_labels.items():
             interface_voice_labels[k] = v.get_voice_fragment_url(self)
