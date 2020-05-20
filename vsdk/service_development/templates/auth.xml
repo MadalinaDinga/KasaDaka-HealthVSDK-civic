@@ -8,6 +8,7 @@
         </prompt>
     </block>
 
+    <block>
     <field name="usernamefield" type="number">
        <filled>
             <block>
@@ -17,6 +18,7 @@
             </block>
        </filled>
     </field>
+    </block>
 
     <block>
         <assign name="username" expr="'123'"/>
