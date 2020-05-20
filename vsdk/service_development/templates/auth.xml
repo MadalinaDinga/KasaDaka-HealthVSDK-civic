@@ -8,11 +8,21 @@
             <audio src="{{ language.get_interface_voice_label_url_dict.auth_voice_label }}"/>
         </prompt>
 
-        <field name="username_field">
-            <prompt>
-                 <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
-            </prompt>
-        </field>
+        <prompt>
+             <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
+        </prompt>
+
+        <prompt>
+             <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
+        </prompt>
+
+        <prompt>
+             <audio src="{{ language.get_interface_voice_label_url_dict.password_voice_label }}"/>
+        </prompt>
+
+        <prompt>
+             <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
+        </prompt>
 
         <assign name="username" expr="'123'"/>
         <assign name="pass" expr="'123456'"/>
