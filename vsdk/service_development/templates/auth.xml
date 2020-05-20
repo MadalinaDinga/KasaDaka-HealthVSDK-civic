@@ -8,11 +8,10 @@
             <audio src="{{ language.get_interface_voice_label_url_dict.auth_voice_label }}"/>
         </prompt>
 
-        <field name="username_field" type="number">
+        <field name="username_field">
             <prompt>
                  <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
             </prompt>
-
         </field>
 
         <assign name="username" expr="'123'"/>
