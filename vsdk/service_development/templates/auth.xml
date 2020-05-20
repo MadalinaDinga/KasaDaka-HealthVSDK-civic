@@ -17,9 +17,9 @@
             <grammar xml:lang="en-US" root = "MYRULE" mode="dtmf">
                   <rule id="MYRULE" scope = "public">
                     <one-of>
-                      {% for option in choice_options %}
-                        <item>{{ forloop.counter }}</item>
-                      {% endfor %}
+                     <item>
+                        123
+                     </item>
                     </one-of>
                    </rule>
             </grammar>
