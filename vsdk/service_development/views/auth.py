@@ -90,4 +90,3 @@ class UserAuthentication(TemplateView):
                    'redirect_url': redirect_url
                    }
         return render(request, 'auth-success.xml', context, content_type='text/xml')
-        # return HttpResponseRedirect(redirect_url)

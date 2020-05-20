@@ -24,10 +24,31 @@ OR
 2. import to Heroku Postgres using AWS
 	https://devcenter.heroku.com/articles/heroku-postgres-import-export#restore-to-local-database
 	
-	heroku pg:backups:restore "https://www.dropbox.com/s/7z1lwdhkb9rm0j6/local.dump?dl=0" DATABASE_URL --app arcane-island-15098 --confirm arcane-island-15098
+	heroku pg:backups:restore "http://www.dropbox.com/s/7z1lwdhkb9rm0j6/local.dump" DATABASE_URL --app arcane-island-15098 --confirm arcane-island-15098
 
 heroku pg:backups:info r009 --app arcane-island-15098
 
 Push/pull doc:
 https://devcenter.heroku.com/articles/heroku-postgresql
 
+-------------------------------------MIGRATE--DB-------------------------------------
+
+> heroku config:set  SFTP_PASS=”T:5^4[nd7SP?B2v3”
+> heroku config:set  SFTP_USER=group6
+> heroku config:set  SFTP_HOST=ict4d.saadittoh.com
+> heroku config:set  SFTP_PORT=22
+> heroku config:set  HEROKU=True
+
+Push to Heroku: > git push heroku HEAD:master
+
+Whenever data models changed in your project, run the following to create/update the code and the database structure:
+> heroku run bash
+> python manage.py showmigrations
+> python manage.py makemigrations service_development
+> python manage.py migrate (to run migrations)
+
+Create superuser account
+> python manage.py createsuperuser
+
+Settings variables:
+https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-MEDIA_ROOT
