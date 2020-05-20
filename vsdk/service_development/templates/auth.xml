@@ -8,17 +8,23 @@
         </prompt>
     </block>
 
-    <block>
-    <field name="usernamefield" type="number">
+
+    <field name="usernamefield">
+        <grammar xml:lang="en-US" root = "MYRULE" mode="dtmf">
+          <rule id="MYRULE" scope = "public">
+            <one-of>
+                <item>123</item>
+                <item>000</item>
+            </one-of>
+           </rule>
+        </grammar>
        <filled>
-            <block>
-                <prompt>
-                    <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
-                </prompt>
-            </block>
+            <prompt>
+                <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
+            </prompt>
        </filled>
     </field>
-    </block>
+
 
     <block>
         <assign name="username" expr="'123'"/>
