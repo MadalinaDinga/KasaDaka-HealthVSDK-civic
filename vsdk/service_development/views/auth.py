@@ -70,21 +70,15 @@ class UserAuthentication(TemplateView):
         user = lookup_kasadaka_user_by_username(in_username, voice_service)
 
         logger.debug("Retrieved user {}".format(user, in_username))
-        if user is None:
-            session.record_step(None, "Authentication failed - No user associated to this service, %s" % in_username)
-            language = session.language
 
+        if user is None or not user.is_valid_credentials(in_username, in_password, voice_service):
+            session.record_step(None, "Authentication failed - Wrong username or password, %s" % in_username)
+            language = session.language
             context = {'language': language}
             logger.debug("Render auth-fail.xml")
             r = render(request, 'auth-fail.xml', context, content_type='text/xml')
             logger.debug(f"RENDEERING {r.content}")
             return r
-            # raise ValueError('No user associated to this service')
-
-        if not user.is_valid_credentials(in_username, in_password, voice_service):
-            session.record_step(None, "Authentication failed - Invalid credentials, %s" % in_username)
-            return render(request, 'auth-fail.xml', content_type='text/xml')
-            # raise ValueError('Invalid credentials')
 
         session.user = user
         session.save()
