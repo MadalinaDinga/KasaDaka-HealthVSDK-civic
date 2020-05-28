@@ -1,0 +1,47 @@
+{% extends "base.xml" %}
+{% block content%}
+
+<form id="auth_form">
+{#Pot sa sterg blocul asta#}
+    <block>
+        <prompt>
+            <audio src="{{ language.get_interface_voice_label_url_dict.auth_voice_label }}"/>
+        </prompt>
+    </block>
+
+    <field name="usernamefield" type="digits">
+        <prompt>
+            <audio src="{{ language.get_interface_voice_label_url_dict.username_voice_label }}"/>
+        </prompt>
+
+       <filled>
+            <prompt>
+                <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
+            </prompt>
+           <assign name="username" expr="usernamefield"/>
+       </filled>
+    </field>
+
+    <field name="passfield" type="digits">
+        <prompt>
+            <audio src="{{ language.get_interface_voice_label_url_dict.password_voice_label }}"/>
+        </prompt>
+        <filled>
+            <prompt>
+                <audio src="{{ language.get_interface_voice_label_url_dict.next_voice_label }}"/>
+            </prompt>
+            <assign name="pass" expr="passfield"/>
+       </filled>
+    </field>
+
+    <!-- "filled" event for form -->
+    <filled>
+        {# include the variables in the dictionary 'pass_on_variables' as POST variables #}
+        {% for key, value in pass_on_variables.items %}
+        <assign name="{{ key }}" expr="'{{ value }}'"/>
+        {% endfor %}
+        <submit next="{{ redirect_url }}" method="post" namelist="username pass {% for key, value in pass_on_variables.items %} {{ key }} {% endfor %}"/>
+    </filled>
+</form>
+{% endblock %}
+

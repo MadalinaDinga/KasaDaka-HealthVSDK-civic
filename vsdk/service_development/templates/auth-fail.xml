@@ -1,0 +1,14 @@
+{% extends "base.xml" %}
+{% block content %}
+
+<form>
+    <block>
+        <prompt>
+            <audio src="{{ language.get_interface_voice_label_url_dict.authfail_label }}"/>
+        </prompt>
+        <exit/>
+    </block>
+</form>
+
+{% endblock %}
+
