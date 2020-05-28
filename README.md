@@ -1,11 +1,11 @@
 # KasaDaka-Voice Service Development Kit
 
 Pull (restore locally):
-heroku pg:pull postgresql-polished-18873 kasadaka_db --app arcane-island-15098
+heroku pg:pull postgresql-slippery-06690 kasadaka_db --app still-hollows-94505
 OR
 1. get dump from heroku => latest.dump
-	heroku pg:backups:capture --app arcane-island-15098
-	heroku pg:backups:download --app arcane-island-15098
+	heroku pg:backups:capture --app still-hollows-94505
+	heroku pg:backups:download --app still-hollows-94505
 2. drop current db 
 	 dropdb -U dbadmin kasadaka_db
 3. recreate db
@@ -15,18 +15,18 @@ OR
 
 
 Push (restore on heroku):
-heroku pg:reset --app arcane-island-15098
+heroku pg:reset --app still-hollows-94505
 set PGUSER=dbadmin 
-heroku pg:push kasadaka_db postgresql-polished-18873 --app arcane-island-15098
+heroku pg:push kasadaka_db postgresql-slippery-06690 --app still-hollows-94505
 OR
 1. get local dump
 	pg_dump -Fc --no-acl --no-owner -h localhost -U dbadmin kasadaka_db > local.dump
 2. import to Heroku Postgres using AWS
 	https://devcenter.heroku.com/articles/heroku-postgres-import-export#restore-to-local-database
 	
-	heroku pg:backups:restore "http://www.dropbox.com/s/7z1lwdhkb9rm0j6/local.dump" DATABASE_URL --app arcane-island-15098 --confirm arcane-island-15098
+	heroku pg:backups:restore "http://www.dropbox.com/s/7z1lwdhkb9rm0j6/local.dump" DATABASE_URL --app still-hollows-94505 --confirm still-hollows-94505
 
-heroku pg:backups:info r009 --app arcane-island-15098
+heroku pg:backups:info r009 --app still-hollows-94505
 
 Push/pull doc:
 https://devcenter.heroku.com/articles/heroku-postgresql
