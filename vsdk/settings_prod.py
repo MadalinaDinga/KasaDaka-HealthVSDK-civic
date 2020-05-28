@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'vsdk.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'kasadaka_db',
+        'NAME': 'kasadaka_db1',
         'USER': 'dbadmin',
         'PASSWORD': 'admin',
         'HOST': 'localhost',
