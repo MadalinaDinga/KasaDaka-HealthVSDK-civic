@@ -17,9 +17,9 @@ OR
 
 
 Push (restore on heroku):
-heroku pg:reset --app still-hollows-94505
+heroku pg:reset --app still-hollows-94505 --confirm still-hollows-94505
 set PGUSER=dbadmin 
-heroku pg:push kasadaka_db postgresql-slippery-06690 --app still-hollows-94505
+heroku pg:push kasadaka_db1 postgresql-slippery-06690 --app still-hollows-94505
 OR
 1. get local dump
 	pg_dump -Fc --no-acl --no-owner -h localhost -U dbadmin kasadaka_db > local.dump
