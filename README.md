@@ -1,4 +1,6 @@
 # KasaDaka-Voice Service Development Kit
+Open app:
+http://still-hollows-94505.herokuapp.com/
 
 Pull (restore locally):
 heroku pg:pull postgresql-slippery-06690 kasadaka_db --app still-hollows-94505
