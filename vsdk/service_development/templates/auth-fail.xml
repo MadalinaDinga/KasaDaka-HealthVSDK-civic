@@ -5,6 +5,8 @@
     <block>
         <prompt>
             <audio src="{{ language.get_interface_voice_label_url_dict.authfail_label }}"/>
+            <audio src="{{ language.get_interface_voice_label_url_dict.reasonfail_label }}"/>
+            <audio src="{{ language.get_interface_voice_label_url_dict.callagain_label }}"/>
         </prompt>
         <exit/>
     </block>

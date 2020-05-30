@@ -157,6 +157,20 @@ class Language(models.Model):
                              verbose_name='Authentication fail label',
                              related_name='authfail_label',
                              help_text=_("Authentication failure message"))
+    reasonfail = models.ForeignKey('VoiceLabel',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.PROTECT,
+                                 verbose_name='Authentication fail reason',
+                                 related_name='reasonfail_label',
+                                 help_text=_("Authentication reason for failure message"))
+    callagain = models.ForeignKey('VoiceLabel',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.PROTECT,
+                                 verbose_name='Call again',
+                                 related_name='callagain_label',
+                                 help_text=_("Call again message"))
     authsuccess = models.ForeignKey('VoiceLabel',
                                  null=True,
                                  blank=True,
@@ -215,7 +229,9 @@ class Language(models.Model):
             'auth_voice_label': self.authenticate,
             'next_voice_label': self.next,
             'authfail_label': self.authfail,
-            'authsuccess_label': self.authsuccess
+            'authsuccess_label': self.authsuccess,
+            'callagain_label': self.callagain,
+            'reasonfail_label': self.reasonfail
         }
         for k, v in interface_voice_labels.items():
             interface_voice_labels[k] = v.get_voice_fragment_url(self)
