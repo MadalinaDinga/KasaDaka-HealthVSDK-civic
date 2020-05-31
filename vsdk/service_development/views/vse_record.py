@@ -6,10 +6,10 @@ from ..models import *
 def record_get_redirect_url(record_element, session):
     return record_element.redirect.get_absolute_url(session)
 
+
 def record_generate_context(record_element, session):
     language = session.language
     redirect_url = record_get_redirect_url(record_element, session)
-
 
     voice_label = record_element.voice_label.get_voice_fragment_url(language)
     ask_confirmation_voice_label = record_element.ask_confirmation_voice_label.get_voice_fragment_url(language)
@@ -18,15 +18,14 @@ def record_generate_context(record_element, session):
     did_not_hear_voice_label = record_element.not_heard_voice_label.get_voice_fragment_url(language)
     max_time_input = record_element.max_time_input
 
-
     context = {'record': record_element,
                'redirect_url': redirect_url,
-               'voice_label' : voice_label,
-               'ask_confirmation_voice_label' : ask_confirmation_voice_label,
-               'repeat_voice_label' : repeat_voice_label ,
-               'final_voice_label' : final_voice_label,
-               'did_not_hear_voice_label' : did_not_hear_voice_label,
-               'max_time_input' : max_time_input
+               'voice_label': voice_label,
+               'ask_confirmation_voice_label': ask_confirmation_voice_label,
+               'repeat_voice_label': repeat_voice_label,
+               'final_voice_label': final_voice_label,
+               'did_not_hear_voice_label': did_not_hear_voice_label,
+               'max_time_input': max_time_input
 
                }
 
@@ -37,7 +36,6 @@ def record(request, element_id, session_id):
     record_element = get_object_or_404(Record, pk=element_id)
     voice_service = record_element.service
     session = lookup_or_create_session(voice_service, session_id)
-
 
     if request.method == "POST":
         session = get_object_or_404(CallSession, pk=session_id)
@@ -50,16 +48,15 @@ def record(request, element_id, session_id):
 
         result.audio = request.FILES['recording']
         result.audio.name = 'recording_%s_%s.wav' % (session_id, element_id)
-        result.category = record_element.input_category 
+        result.category = record_element.input_category
 
         result.save()
 
-        #if record_element.map_to_call_session_property in vars(session).keys():
+        # if record_element.map_to_call_session_property in vars(session).keys():
         #    setattr(session, record_element.map_to_call_session_property, value)
 
         # redirect to next element
         return redirect(request.POST['redirect'])
-
 
     session.record_step(record_element)
     context = record_generate_context(record_element, session)
@@ -67,4 +64,3 @@ def record(request, element_id, session_id):
     context['url'] = request.get_full_path(False)
 
     return render(request, 'record.xml', context, content_type='text/xml')
-

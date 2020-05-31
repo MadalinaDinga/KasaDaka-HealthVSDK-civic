@@ -62,30 +62,27 @@ class UserAuthentication(TemplateView):
 
         session = get_object_or_404(CallSession, pk=session_id)
         voice_service = session.service
+        language = session.language
 
         in_username = request.POST['username']
         in_password = request.POST['pass']
 
         logger.debug("Searching for username {}".format(in_username))
         user = lookup_kasadaka_user_by_username(in_username, voice_service)
-
         logger.debug("Retrieved user {}".format(user, in_username))
 
         if user is None or not user.is_valid_credentials(in_username, in_password, voice_service):
             session.record_step(None, "Authentication failed - Wrong username or password, %s" % in_username)
-            language = session.language
             context = {'language': language}
             logger.debug("Render auth-fail.xml")
             return render(request, 'auth-fail.xml', context, content_type='text/xml')
 
-        session.user = user
-        session.save()
-
+        user.language = language
+        session.link_to_user(user)
         session.record_step(None, "Authentication successful, %s" % in_username)
 
         # Return to the auth-success page, which will redirect to the start of the voice service
         logger.debug("Redirecting to {}".format(redirect_url))
-        language = session.language
         context = {'language': language,
                    'redirect_url': redirect_url
                    }
