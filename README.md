@@ -9,16 +9,16 @@ OR
 	heroku pg:backups:capture --app still-hollows-94505
 	heroku pg:backups:download --app still-hollows-94505
 2. drop current db 
-	 dropdb -U dbadmin kasadaka_db
+	 dropdb -U dbadmin kasadaka_db1
 3. recreate db
-	 createdb -U dbadmin kasadaka_db 
+	 createdb -U dbadmin kasadaka_db1 
 4. restore locally
-	pg_restore --verbose -h localhost -U dbadmin -d kasadaka_db latest.dump
+	pg_restore --verbose -h localhost -U dbadmin -d kasadaka_db1 latest.dump
 
 
 Push (restore on heroku):
 heroku pg:reset --app still-hollows-94505 --confirm still-hollows-94505
-set PGUSER=dbadmin 
+set PGUSER=dbadmin
 heroku pg:push kasadaka_db1 postgresql-slippery-06690 --app still-hollows-94505
 OR
 1. get local dump

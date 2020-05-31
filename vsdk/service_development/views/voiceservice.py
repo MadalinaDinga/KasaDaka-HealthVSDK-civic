@@ -32,9 +32,11 @@ def voice_service_start(request, voice_service_id, session_id=None):
     if voice_service.is_pass_based_auth:
 
         logger.debug("Password-based authentication is set")
+
+        logger.debug("Session language before selection {}".format(session.language))
         if not session.language:
             return select_session_language(voice_service, session, caller_id)
-        logger.debug("Session language {}".format(session.language))
+        logger.debug("Session language after selection {}".format(session.language))
 
         logger.debug("Start authentication process if required or preferred")
         if not session.user and voice_service.registration_preferred_or_required:
