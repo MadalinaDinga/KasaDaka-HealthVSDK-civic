@@ -60,6 +60,7 @@ def voice_service_start(request, voice_service_id, session_id=None):
         logger.debug("Session language is {}".format(session.language))
 
     logger.debug("Redirecting to start element {}".format(voice_service.start_element))
+    logger.debug("Current session {}".format(session))
     return base.redirect_to_voice_service_element(voice_service.start_element, session)
 
 

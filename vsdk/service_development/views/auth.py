@@ -78,6 +78,7 @@ class UserAuthentication(TemplateView):
             return render(request, 'auth-fail.xml', context, content_type='text/xml')
 
         user.language = language
+        user.save()
         session.link_to_user(user)
         session.record_step(None, "Authentication successful, %s" % in_username)
 

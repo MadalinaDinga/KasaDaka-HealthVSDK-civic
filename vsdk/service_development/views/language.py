@@ -56,7 +56,6 @@ class LanguageSelection(TemplateView):
                 raise ValueError('Incorrect request, language ID not set')
 
             session = get_object_or_404(CallSession, pk=session_id)
-            voice_service = session.service
             language = get_object_or_404(Language, pk=request.POST['language_id'])
 
             session._language = language
