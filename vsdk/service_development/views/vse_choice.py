@@ -2,8 +2,15 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 
 from ..models import *
 
+import logging
+
+logger = logging.getLogger("mada")
+
 
 def choice_options_resolve_redirect_urls(choice_options, session):
+    """
+    Returns all possible redirect URLs for *AFTER* the choice option selection process
+    """
     choice_options_redirection_urls = []
     for choice_option in choice_options:
         redirect_url = choice_option.redirect.get_absolute_url(session)
@@ -33,6 +40,8 @@ def choice_generate_context(choice_element, session):
     choice_options = choice_element.choice_options.all()
     language = session.language
     choice_element_config = {'skip_reading_choice_options': choice_element.skip_reading_choice_options}
+    # This is the redirect URL to POST the selected choice option
+    redirect_url_POST = reverse('service-development:choice', args=[choice_element.id, session.id])
 
     context = {'choice': choice_element,
                'choice_voice_label': choice_element.get_voice_fragment_url(language),
@@ -41,14 +50,52 @@ def choice_generate_context(choice_element, session):
                'choice_options_voice_labels': choice_options_resolve_voice_labels(choice_options, language),
                'choice_options_redirect_urls': choice_options_resolve_redirect_urls(choice_options, session),
                'language': language,
+               'redirect_url': redirect_url_POST
                }
     return context
 
 
 def choice(request, element_id, session_id):
+    """
+       Asks the user to select one of the choice options.
+    """
+    logger.debug("REQUEST {}".format(request))
+    logger.debug("Session {}".format(session_id))
+
     choice_element = get_object_or_404(Choice, pk=element_id)
     session = get_object_or_404(CallSession, pk=session_id)
     session.record_step(choice_element)
     context = choice_generate_context(choice_element, session)
 
+    logger.debug("Context {} - Session {}".format(context, session))
+    logger.debug("Render choice.xml")
     return render(request, 'choice.xml', context, content_type='text/xml')
+
+
+def post(request, session_id):
+    try:
+        """
+        Saves the chosen option to a new session self-check item
+        """
+        logger.debug("REQUEST {}".format(request))
+
+        if 'option_redirect' in request.POST:
+            redirect_url = request.POST['option_redirect']
+        else:
+            logger.error("Incorrect request, redirect_url not set")
+            raise ValueError('Incorrect request, redirect_url not set')
+        if 'choice_id' not in request.POST:
+            logger.error("Incorrect request, choice option ID not set")
+            raise ValueError('Incorrect request, choice option ID not set')
+
+        session = get_object_or_404(CallSession, pk=session_id)
+        logger.debug("Session {}".format(session))
+        choice_option = get_object_or_404(ChoiceOption, pk=request.POST['choice_id'])
+        logger.debug("Choice option {}".format(choice_option))
+
+        # TODO: save choice option if choice element is marked as persistent (e.g., symptom or risk)
+        return HttpResponseRedirect(redirect_url)
+    except Exception as ex:
+        logger.error("POST")
+        logger.error(ex)
+        return None
