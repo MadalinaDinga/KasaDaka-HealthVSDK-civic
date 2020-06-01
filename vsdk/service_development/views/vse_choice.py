@@ -89,6 +89,9 @@ class ChoiceSelection(TemplateView):
                 logger.error("Incorrect request, redirect_url not set")
                 raise ValueError('Incorrect request, redirect_url not set')
 
+            logger.debug("choice id {}".format(request.POST))
+            logger.debug("redirect url {}".format(redirect_url))
+
             session = get_object_or_404(CallSession, pk=session_id)
             logger.debug("Session {}".format(session))
             choice_option = get_object_or_404(ChoiceOption, pk=request.POST['choice_id'])
