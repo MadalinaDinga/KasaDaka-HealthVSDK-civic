@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext
 
@@ -8,11 +9,14 @@ class Symptom(models.Model):
     """
     name = models.CharField(_('Name'), max_length=100)
     description = models.CharField(max_length=1000, blank=True)
-    _percentage_severe = models.PositiveIntegerField(null=True, blank=True,
-                                                     help_text=_(
-                                                         "The percentage of people with severe COVID-19 reporting the symptom."))
-    _percentage_nonsevere = models.PositiveIntegerField(null=True, blank=True, help_text=_(
-                                                         "The percentage of people with non-severe COVID-19 reporting the symptom."))
+    _percentage_severe = models.FloatField(null=True, blank=True,
+                                           validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                           help_text=_(
+                                               "The percentage of people with severe COVID-19 reporting the symptom."))
+    _percentage_nonsevere = models.FloatField(null=True, blank=True,
+                                              validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                              help_text=_(
+                                                  "The percentage of people with non-severe COVID-19 reporting the symptom."))
 
     @property
     def percentage(self):
