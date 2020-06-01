@@ -71,12 +71,13 @@ class ChoiceSelection(TemplateView):
         logger.debug("Render choice.xml")
         return render(request, 'choice.xml', context, content_type='text/xml')
 
-    def post(self, request, session_id):
+    def post(self, request, element_id, session_id):
         try:
             """
             Saves the chosen option to a new session self-check item
             """
             logger.debug("REQUEST {}".format(request))
+            logger.debug("Element ID {} - Session ID {}".format(element_id, session_id))
 
             if 'option_redirect' in request.POST:
                 redirect_url = request.POST['option_redirect']
