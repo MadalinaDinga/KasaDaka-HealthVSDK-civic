@@ -7,7 +7,8 @@ import logging
 
 logger = logging.getLogger("mada")
 
-class Choice(TemplateView):
+
+class ChoiceSelection(TemplateView):
 
     def choice_options_resolve_redirect_urls(self, choice_options, session):
         """
