@@ -33,10 +33,12 @@
               <if cond="choice == '{{ forloop.counter }}'">
                 {% comment %} TODO how do you look up a url if you don't know yet which class object you are referring to?  {% endcomment %}
                  <assign name="choice_id" expr="'{{ option_redirect.id }}'"/>
+                  <assign name="option_redirect" expr="'{{ option_redirect }}'"/>
                 {# <goto next="{{ option_redirect }}"/>#}
               {% else %}
               <elseif cond="choice == '{{ forloop.counter }}'" />
                   <assign name="choice_id" expr="'{{ option_redirect.id }}'"/>
+                  <assign name="option_redirect" expr="'{{ option_redirect }}'"/>
                 {# <goto next="{{ option_redirect }}"/>#}
               {% endif %}
             {% endfor %}

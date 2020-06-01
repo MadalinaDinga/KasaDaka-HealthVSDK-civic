@@ -79,14 +79,15 @@ class ChoiceSelection(TemplateView):
             logger.debug("REQUEST {}".format(request))
             logger.debug("Element ID {} - Session ID {}".format(element_id, session_id))
 
+            if 'choice_id' not in request.POST:
+                logger.error("Incorrect request, choice option ID not set")
+                raise ValueError('Incorrect request, choice option ID not set')
+
             if 'option_redirect' in request.POST:
                 redirect_url = request.POST['option_redirect']
             else:
                 logger.error("Incorrect request, redirect_url not set")
                 raise ValueError('Incorrect request, redirect_url not set')
-            if 'choice_id' not in request.POST:
-                logger.error("Incorrect request, choice option ID not set")
-                raise ValueError('Incorrect request, choice option ID not set')
 
             session = get_object_or_404(CallSession, pk=session_id)
             logger.debug("Session {}".format(session))
