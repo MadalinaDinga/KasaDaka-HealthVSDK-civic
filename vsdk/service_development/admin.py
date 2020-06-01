@@ -7,28 +7,32 @@ from django.utils.safestring import mark_safe
 from vsdk import settings
 from .models import *
 
+
 def format_validation_result(obj):
-        """
+    """
         Creates a HTML list from all errors found in validation
         """
-        return '<br/>'.join(obj.validator())
+    return '<br/>'.join(obj.validator())
 
 
 class VoiceServiceAdmin(admin.ModelAdmin):
-    fieldsets = [(_('General'),    {'fields' : ['name', 'description', 'vxml_url', 'active', 'is_valid', 'validation_details', 'supported_languages']}),
-                    (_('Registration process'), {'fields': ['registration', 'is_pass_based_auth', 'registration_language']}),
-                    (_('Call flow'), {'fields': ['_start_element']})]
-    list_display = ('name','active')
+    fieldsets = [(_('General'), {
+        'fields': ['name', 'description', 'vxml_url', 'active', 'is_valid', 'validation_details',
+                   'supported_languages']}),
+                 (_('Registration process'),
+                  {'fields': ['registration', 'is_pass_based_auth', 'registration_language']}),
+                 (_('Call flow'), {'fields': ['_start_element']})]
+    list_display = ('name', 'active')
     readonly_fields = ('vxml_url', 'is_valid', 'validation_details')
 
     def save_model(self, request, obj, form, change):
         if obj.active and 'active' in form.changed_data and settings.KASADAKA:
-            #set all other voice services to inactive
+            # set all other voice services to inactive
             other_vs = VoiceService.objects.exclude(pk=obj.id)
             for vs in other_vs:
                 vs.active = False
                 vs.save()
-            #change asterisk config here
+            # change asterisk config here
             from pathlib import Path
             my_file = Path(settings.ASTERISK_EXTENSIONS_FILE)
             if my_file.is_file():
@@ -37,16 +41,18 @@ class VoiceServiceAdmin(admin.ModelAdmin):
                     import re
                     extensions = infile.read()
                     regex = r"(Vxml\()(.+)(\?callerid\=\$\{CALLERID\(num\)\}\))"
-                    subst = "\\1"+ settings.VXML_HOST_ADDRESS + str(obj.get_vxml_url()) + "\\3"
+                    subst = "\\1" + settings.VXML_HOST_ADDRESS + str(obj.get_vxml_url()) + "\\3"
                     extensions = re.sub(regex, subst, extensions, 0)
                 with open(settings.ASTERISK_EXTENSIONS_FILE, 'w') as outfile:
                     outfile.write(extensions)
-                #Reload asterisk
+                # Reload asterisk
                 import subprocess
                 subprocess.getoutput("sudo /etc/init.d/asterisk reload")
-                messages.add_message(request, messages.WARNING, _('Voice service activated. Other voice services have been deactivated, the Asterisk configuration has been changed to point to this service, and this new configuration has been loaded.'))
+                messages.add_message(request, messages.WARNING, _(
+                    'Voice service activated. Other voice services have been deactivated, the Asterisk configuration has been changed to point to this service, and this new configuration has been loaded.'))
             else:
-                messages.add_message(request, messages.ERROR, _('Voice service activated. Other voice services have been deactivated. THE ASTERISK CONFIGURATION COULD NOT BE FOUND!'))
+                messages.add_message(request, messages.ERROR, _(
+                    'Voice service activated. Other voice services have been deactivated. THE ASTERISK CONFIGURATION COULD NOT BE FOUND!'))
         super(VoiceServiceAdmin, self).save_model(request, obj, form, change)
 
     def get_readonly_fields(self, request, obj=None):
@@ -58,40 +64,57 @@ class VoiceServiceAdmin(admin.ModelAdmin):
                 return self.readonly_fields + ('active',)
         return self.readonly_fields
 
-
     def validation_details(self, obj=None):
         return mark_safe(format_validation_result(obj))
+
     validation_details.short_description = _('Validation errors')
-    
+
 
 class VoiceServiceElementAdmin(admin.ModelAdmin):
-    fieldsets = [(_('General'),    {'fields' : [ 'name', 'description','service','is_valid', 'validation_details', 'voice_label']})]
+    fieldsets = [
+        (_('General'), {'fields': ['name', 'description', 'service', 'is_valid', 'validation_details', 'voice_label']})]
     list_filter = ['service']
     list_display = ('name', 'service', 'is_valid')
     readonly_fields = ('is_valid', 'validation_details')
-     
+
     def validation_details(self, obj=None):
         return mark_safe(format_validation_result(obj))
+
     validation_details.short_description = _('Validation errors')
+
 
 class ChoiceOptionsInline(admin.TabularInline):
     model = ChoiceOption
+    insert_after = 'skip_reading_choice_options'
     extra = 2
     fk_name = 'parent'
     view_on_site = False
     verbose_name = _('Possible choice')
     verbose_name_plural = _('Possible choices')
 
+
 class ChoiceAdmin(VoiceServiceElementAdmin):
+    fieldsets = VoiceServiceElementAdmin.fieldsets + [
+        (_('Customize Choice Element'), {'fields': ['skip_reading_choice_options']})]
+
     inlines = [ChoiceOptionsInline]
+
+    change_form_template = 'admin/custom/change_form.html'
+
+    class Media:
+        css = {
+            'all': (
+                'css/admin.css',
+            )
+        }
+
 
 class VoiceLabelInline(admin.TabularInline):
     model = VoiceFragment
     extra = 2
     fk_name = 'parent'
-    fieldsets = [(_('General'),    {'fields' : [ 'language', 'is_valid', 'audio', 'audio_file_player']})]
-    readonly_fields = ('audio_file_player','is_valid')
-
+    fieldsets = [(_('General'), {'fields': ['language', 'is_valid', 'audio', 'audio_file_player']})]
+    readonly_fields = ('audio_file_player', 'is_valid')
 
 
 class VoiceLabelByVoiceServicesFilter(admin.SimpleListFilter):
@@ -110,10 +133,10 @@ class VoiceLabelByVoiceServicesFilter(admin.SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
-        voice_services  = VoiceService.objects.all()
+        voice_services = VoiceService.objects.all()
         result = []
         for service in voice_services:
-            result.append((service.id,service.name))
+            result.append((service.id, service.name))
         return result
 
     def queryset(self, request, queryset):
@@ -124,6 +147,7 @@ class VoiceLabelByVoiceServicesFilter(admin.SimpleListFilter):
         """
         return VoiceLabel.objects.filter(voiceservicesubelement__service__id=self.value()).distinct()
 
+
 class VoiceLabelAdmin(admin.ModelAdmin):
     list_display = ['name']
     list_filter = [VoiceLabelByVoiceServicesFilter]
@@ -131,25 +155,26 @@ class VoiceLabelAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         if not settings.KASADAKA:
-            messages.add_message(request, messages.WARNING, _('Automatic .wav file conversion only works when running on real KasaDaka system. MANUALLY ensure your files are in the correct format! Wave (.wav) : Sample rate 8KHz, 16 bit, mono, Codec: PCM 16 LE (s16l)'))
-        super(VoiceLabelAdmin,self).save_model(request, obj, form, change)
-
+            messages.add_message(request, messages.WARNING, _(
+                'Automatic .wav file conversion only works when running on real KasaDaka system. MANUALLY ensure your files are in the correct format! Wave (.wav) : Sample rate 8KHz, 16 bit, mono, Codec: PCM 16 LE (s16l)'))
+        super(VoiceLabelAdmin, self).save_model(request, obj, form, change)
 
 
 class CallSessionInline(admin.TabularInline):
     model = CallSessionStep
-    extra = 0 
+    extra = 0
     fk_name = 'session'
     can_delete = False
-    fieldsets = [(_('General'), {'fields' : ['visited_element', 'time', 'description']})]
-    readonly_fields = ('time','session','visited_element', 'description')
+    fieldsets = [(_('General'), {'fields': ['visited_element', 'time', 'description']})]
+    readonly_fields = ('time', 'session', 'visited_element', 'description')
     max_num = 0
 
+
 class CallSessionAdmin(admin.ModelAdmin):
-    list_display = ('start','user','service','caller_id','language')
-    list_filter = ('service','user','caller_id')
-    fieldsets = [(_('General'), {'fields' : ['service', 'user','caller_id','start','end','language']})]
-    readonly_fields = ('service','user','caller_id','start','end','language') 
+    list_display = ('start', 'user', 'service', 'caller_id', 'language')
+    list_filter = ('service', 'user', 'caller_id')
+    fieldsets = [(_('General'), {'fields': ['service', 'user', 'caller_id', 'start', 'end', 'language']})]
+    readonly_fields = ('service', 'user', 'caller_id', 'start', 'end', 'language')
     inlines = [CallSessionInline]
     can_delete = True
 
@@ -159,29 +184,43 @@ class CallSessionAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return True
 
-    #def get_actions(self, request):
+    # def get_actions(self, request):
     #    actions = super(CallSessionAdmin, self).get_actions(request)
     #    if 'delete_selected' in actions:
     #        del actions['delete_selected']
     #    return actions
 
+
 class MessagePresentationAdmin(VoiceServiceElementAdmin):
-    fieldsets = VoiceServiceElementAdmin.fieldsets + [(_('Message Presentation'), {'fields': ['_redirect','final_element']})]
+    fieldsets = VoiceServiceElementAdmin.fieldsets + [
+        (_('Message Presentation'), {'fields': ['_redirect', 'final_element']})]
+
 
 class KasaDakaUserAdmin(admin.ModelAdmin):
-    list_filter = ['service','language','caller_id']
-    list_display = ('__str__','caller_id', 'service', 'language')
+    list_filter = ['service', 'language', 'caller_id']
+    list_display = ('__str__', 'caller_id', 'service', 'language')
+
 
 class SpokenUserInputAdmin(admin.ModelAdmin):
-    list_display = ('__str__','category','description','audio_file_player')
+    list_display = ('__str__', 'category', 'description', 'audio_file_player')
     list_filter = ('category',)
-    fieldsets = [(_('General'), {'fields' : ['audio', 'audio_file_player', 'session','category','description']})]
-    readonly_fields = ('audio','session','category', 'audio_file_player') 
+    fieldsets = [(_('General'), {'fields': ['audio', 'audio_file_player', 'session', 'category', 'description']})]
+    readonly_fields = ('audio', 'session', 'category', 'audio_file_player')
     can_delete = True
 
     def has_add_permission(self, request):
         return False
 
+
+class SelfCheckItemAdmin(admin.ModelAdmin):
+    list_display = ('session', 'symptom', 'risk', 'has_symptom')
+    list_filter = ('symptom', 'risk')
+    fieldsets = [(_('General'), {'fields': ['session', 'symptom', 'risk', 'has_symptom']})]
+    readonly_fields = ('session', 'symptom', 'risk', 'has_symptom')
+    can_delete = False
+
+    def has_add_permission(self, request):
+        return False
 
 
 # Register your models here.
@@ -196,3 +235,6 @@ admin.site.register(VoiceLabel, VoiceLabelAdmin)
 admin.site.register(SpokenUserInput, SpokenUserInputAdmin)
 admin.site.register(UserInputCategory)
 admin.site.register(Record)
+admin.site.register(Symptom)
+admin.site.register(Risk)
+admin.site.register(SelfCheckItem, SelfCheckItemAdmin)

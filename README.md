@@ -53,4 +53,10 @@ Create superuser account
 > python manage.py createsuperuser
 
 Settings variables:
-https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-MEDIA_ROOT
+https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-MEDIA_ROOT 
+
+-------------------------------------RUN SERVER-------------------------------------
+> python manage.py runserver
+
+
+

@@ -7,6 +7,10 @@ from .vs_element import VoiceServiceElement, VoiceServiceSubElement
 
 class Choice(VoiceServiceElement):
     _urls_name = 'service-development:choice'
+    skip_reading_choice_options = models.BooleanField(default=False,
+                                             verbose_name=_('Skip Mentioning Choice Options'),
+                                             help_text=_(
+                                                 'Whether the choice options should be mentioned to the user for the choice element'))
 
     class Meta:
         verbose_name = _('Choice Element')

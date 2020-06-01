@@ -4,6 +4,7 @@ from django.utils.translation import ugettext
 
 from .vs_element import VoiceServiceElement
 
+
 class MessagePresentation(VoiceServiceElement):
     """
     An element that presents a Voice Label to the user.

@@ -1,0 +1,47 @@
+from django.db import models
+from django.utils.translation import ugettext_lazy as _, ugettext
+
+
+class Symptom(models.Model):
+    """
+    User that belongs to a Voice Service on this system
+    """
+    name = models.CharField(_('Name'), max_length=100)
+    description = models.CharField(max_length=1000, blank=True)
+    _percentage_severe = models.PositiveIntegerField(null=True, blank=True,
+                                                     help_text=_(
+                                                         "The percentage of people with severe COVID-19 reporting the symptom."))
+    _percentage_nonsevere = models.PositiveIntegerField(null=True, blank=True, help_text=_(
+                                                         "The percentage of people with non-severe COVID-19 reporting the symptom."))
+
+    @property
+    def percentage(self):
+        """
+        Returns the average of percentage severe and percentage nonsevere.
+        """
+        return (self._percentage_severe + self._percentage_nonsevere) / 2
+
+    class Meta:
+        verbose_name = _('Symptom')
+
+    def __str__(self):
+        return _('Symptom: %s') % self.name
+
+    def is_valid(self):
+        return len(self.validator()) == 0
+
+    is_valid.boolean = True
+    is_valid.short_description = _('Is valid')
+
+    def validator(self):
+        errors = []
+        if not self.name:
+            errors.append(ugettext('No symptom name'))
+        if not self._percentage_severe:
+            errors.append(ugettext('No percentage for severe cases'))
+        if not self._percentage_nonsevere:
+            errors.append(ugettext('No percentage for non-severe cases'))
+
+        # deduplicate errors
+        errors = list(set(errors))
+        return errors
