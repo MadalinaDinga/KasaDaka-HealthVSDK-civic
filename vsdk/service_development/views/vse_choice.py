@@ -16,6 +16,7 @@ class ChoiceSelection(TemplateView):
         """
         choice_options_redirection_urls = []
         for choice_option in choice_options:
+            logger.debug("Choice option {}".format(choice_option))
             redirect_url = choice_option.redirect.get_absolute_url(session)
             choice_options_redirection_urls.append(redirect_url)
         return choice_options_redirection_urls
@@ -76,7 +77,7 @@ class ChoiceSelection(TemplateView):
             """
             Saves the chosen option to a new session self-check item
             """
-            logger.debug("REQUEST {}".format(request))
+            logger.debug("REQUEST {} - body {}".format(request, request.POST))
             logger.debug("Element ID {} - Session ID {}".format(element_id, session_id))
 
             if 'choice_id' not in request.POST:
@@ -84,22 +85,19 @@ class ChoiceSelection(TemplateView):
                 raise ValueError('Incorrect request, choice option ID not set')
 
             if 'option_redirect' in request.POST:
-                redirect_url = request.POST['option_redirect']
-            else:
                 logger.error("Incorrect request, redirect_url not set")
                 raise ValueError('Incorrect request, redirect_url not set')
 
-            logger.debug("choice id {}".format(request.POST))
-            logger.debug("redirect url {}".format(redirect_url))
+            choice_id = request.POST['choice_id']
+            redirect_url = request.POST['option_redirect']
 
             session = get_object_or_404(CallSession, pk=session_id)
             logger.debug("Session {}".format(session))
-            choice_option = get_object_or_404(ChoiceOption, pk=request.POST['choice_id'])
-            logger.debug("Choice option {}".format(choice_option))
 
-            # TODO: save choice option if choice element is marked as persistent (e.g., symptom or risk)
+            # Save choice option if choice element for persistent elements
+
             return HttpResponseRedirect(redirect_url)
+
         except Exception as ex:
-            logger.error("POST")
-            logger.error(ex)
+            logger.error("Saving the choice option failed with error message - {}".format(ex))
             return None

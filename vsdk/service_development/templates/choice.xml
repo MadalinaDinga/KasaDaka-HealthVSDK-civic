@@ -31,8 +31,6 @@
             {% for option_redirect in choice_options_redirect_urls %}
               {% if forloop.counter == 1 %}
               <if cond="choice == '{{ forloop.counter }}'">
-                {% comment %} TODO how do you look up a url if you don't know yet which class object you are referring to?  {% endcomment %}
-                 //todo: cum iau pozitia?
                   <assign name="choice_id" expr="'{{ forloop.counter }}'"/>
                   <assign name="option_redirect" expr="'{{ option_redirect }}'"/>
                 {# <goto next="{{ option_redirect }}"/>#}
