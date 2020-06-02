@@ -95,7 +95,7 @@ class ChoiceOptionsInline(admin.TabularInline):
 
 class ChoiceAdmin(VoiceServiceElementAdmin):
     fieldsets = VoiceServiceElementAdmin.fieldsets + [
-        (_('Customize Choice Element'), {'fields': ['skip_reading_choice_options']})]
+        (_('Configure Choice Element'), {'fields': ['skip_reading_choice_options', 'is_persistent_choice']})]
 
     inlines = [ChoiceOptionsInline]
 

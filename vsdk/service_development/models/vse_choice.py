@@ -11,6 +11,10 @@ class Choice(VoiceServiceElement):
                                              verbose_name=_('Skip Mentioning Choice Options'),
                                              help_text=_(
                                                  'Whether the choice options should be mentioned to the user for the choice element'))
+    is_persistent_choice = models.BooleanField(default=False,
+                                                 verbose_name=_('Save Choice Option'),
+                                                 help_text=_(
+                                                     'Whether the chosen option should be saved in the database'))
 
     class Meta:
         verbose_name = _('Choice Element')
