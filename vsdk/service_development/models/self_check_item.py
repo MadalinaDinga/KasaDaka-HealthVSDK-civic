@@ -1,8 +1,11 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.translation import ugettext_lazy as _
 
-from vsdk.service_development.models import CallSession, Symptom, Risk, Choice
+from vsdk.service_development.models import CallSession, Choice
+
+import logging
+logger = logging.getLogger("mada")
 
 
 class SelfCheckItem(models.Model):
@@ -18,11 +21,11 @@ class SelfCheckItem(models.Model):
         verbose_name = _('Self-Check')
 
     def __str__(self):
-        if self.risk:
-            return _('SelfCheckItem: %s, risk %s, has_symptom %s') % self.session, self.risk.name, self.has_symptom
-        else:
-            return _(
-                'SelfCheckItem: %s, symptom %s, has_symptom %s') % self.session, self.symptom.name, self.has_symptom
+        return _('SelfCheckItem: time %s, user %s choice element %s has_symptom %s') \
+               % self.session.start, \
+               self.session.user, \
+               self.choice_element.symptom.name, \
+               self.has_symptom
 
 
 def lookup_or_create_self_check_item(self_check_item_id=None, session=None, choice_element=None,
@@ -42,5 +45,6 @@ def lookup_or_create_self_check_item(self_check_item_id=None, session=None, choi
             choice_element=choice_element,
             has_symptom=has_symptom
         )
+        logger.debug("Saving self-check item - {}".format(self_check_item))
         self_check_item.save()
     return self_check_item
