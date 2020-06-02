@@ -84,20 +84,18 @@ class ChoiceSelection(TemplateView):
                 logger.error("Incorrect request, choice option ID not set")
                 raise ValueError('Incorrect request, choice option ID not set')
 
-            if 'option_redirect' in request.POST:
+            if 'option_redirect' not in request.POST:
                 logger.error("Incorrect request, redirect URL not set")
                 raise ValueError('Incorrect request, redirect URL not set')
 
-            choice_option = request.POST['choice_option']
-            redirect_url = request.POST['option_redirect']
-            logger.debug("Choice option {} - redirect URL {}".format(choice_option, redirect_url))
+            logger.debug("Choice option {} - redirect URL {}".format(request.POST['choice_option'], request.POST['option_redirect']))
 
-            # TODO: store self-check element knowing the prev element id, answer and session (if persistent)
-            # current_choice_element = get_object_or_404(Choice, pk=element_id)  # find prev element id
-            # if current_choice_element.is_persistent_choice:
-            #     # Save choice option if choice element for persistent elements
-            #     lookup_or_create_self_check_item(session_id, element_id, choice_option == '1')
-            # return HttpResponseRedirect(redirect_url)
+            current_choice_element = get_object_or_404(Choice, pk=element_id)
+            if current_choice_element.is_persistent_choice:
+                # Save choice option for persistent elements in a self-check item
+                lookup_or_create_self_check_item(None, session_id, element_id, request.POST['choice_option'] == '1')
+
+            return HttpResponseRedirect(request.POST['option_redirect'])
 
         except Exception as ex:
             logger.error("Saving the choice option failed with error message - {}".format(ex))
