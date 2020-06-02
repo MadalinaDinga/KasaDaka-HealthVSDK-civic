@@ -22,7 +22,7 @@ class SelfCheckItem(models.Model):
         verbose_name = _('Self-Check')
 
     def __str__(self):
-        return _('SelfCheckItem: time %s, user %s choice element %s has_symptom %s') \
+        return _('SelfCheckItem: session %s, choice element %s has_symptom %s') \
                % (str(self.session),
                   self.choice_element.symptom.name,
                   self.has_symptom)
