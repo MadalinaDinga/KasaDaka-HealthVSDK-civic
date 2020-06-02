@@ -1,4 +1,7 @@
 # KasaDaka-Voice Service Development Kit
+
+> heroku login
+
 Open app:
 http://still-hollows-94505.herokuapp.com/
 

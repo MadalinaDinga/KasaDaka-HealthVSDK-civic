@@ -77,26 +77,27 @@ class ChoiceSelection(TemplateView):
             """
             Saves the chosen option to a new session self-check item
             """
-            logger.debug("REQUEST {} - body {}".format(request, request.POST))
+            logger.debug("POST request {} - body {}".format(request, request.POST))
             logger.debug("Element ID {} - Session ID {}".format(element_id, session_id))
 
-            if 'choice_id' not in request.POST:
+            if 'choice_option' not in request.POST:
                 logger.error("Incorrect request, choice option ID not set")
                 raise ValueError('Incorrect request, choice option ID not set')
 
             if 'option_redirect' in request.POST:
-                logger.error("Incorrect request, redirect_url not set")
-                raise ValueError('Incorrect request, redirect_url not set')
+                logger.error("Incorrect request, redirect URL not set")
+                raise ValueError('Incorrect request, redirect URL not set')
 
             choice_option = request.POST['choice_option']
             redirect_url = request.POST['option_redirect']
+            logger.debug("Choice option {} - redirect URL {}".format(choice_option, redirect_url))
 
             # TODO: store self-check element knowing the prev element id, answer and session (if persistent)
-            current_choice_element = get_object_or_404(Choice, pk=element_id)  # find prev element id
-            if current_choice_element.is_persistent_choice:
-                # Save choice option if choice element for persistent elements
-                lookup_or_create_self_check_item(session_id, element_id, choice_option == '1')
-            return HttpResponseRedirect(redirect_url)
+            # current_choice_element = get_object_or_404(Choice, pk=element_id)  # find prev element id
+            # if current_choice_element.is_persistent_choice:
+            #     # Save choice option if choice element for persistent elements
+            #     lookup_or_create_self_check_item(session_id, element_id, choice_option == '1')
+            # return HttpResponseRedirect(redirect_url)
 
         except Exception as ex:
             logger.error("Saving the choice option failed with error message - {}".format(ex))
