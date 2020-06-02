@@ -93,7 +93,8 @@ class ChoiceSelection(TemplateView):
             current_choice_element = get_object_or_404(Choice, pk=element_id)
             if current_choice_element.is_persistent_choice:
                 # Save choice option for persistent elements in a self-check item
-                lookup_or_create_self_check_item(None, session_id, element_id, request.POST['choice_option'] == '1')
+                check_item = lookup_or_create_self_check_item(None, session_id, element_id, request.POST['choice_option'] == '1')
+                logger.debug("Saved self-check item {}".format(check_item))
 
             return HttpResponseRedirect(request.POST['option_redirect'])
 
