@@ -25,16 +25,17 @@ class SelfCheckItem(models.Model):
                 'SelfCheckItem: %s, symptom %s, has_symptom %s') % self.session, self.symptom.name, self.has_symptom
 
 
-def lookup_or_create_self_check_item(self_check_item_id=None, session_id=None, choice_element_id=None, has_symptom=None):
+def lookup_or_create_self_check_item(self_check_item_id=None, session_id=None, choice_element_id=None,
+                                     has_symptom=None):
     if self_check_item_id:
         self_check_item = get_object_or_404(SelfCheckItem, pk=self_check_item_id)
     else:
-        if not session_id:
+        if session_id is None:
             raise ValueError('Session ID missing for self-check item')
-        if not choice_element_id:
+        if choice_element_id is None:
             raise ValueError('No choice element associated with the self-check item')
-        if not has_symptom:
-            raise ValueError('No answer associated to the self-check item')
+        if has_symptom is None:
+            raise ValueError('No answer/option associated to the self-check item')
 
         self_check_item = SelfCheckItem.objects.create(
             session=session_id,
