@@ -90,12 +90,13 @@ class ChoiceSelection(TemplateView):
 
             logger.debug("Choice option {} - redirect URL {}".format(request.POST['choice_option'], request.POST['option_redirect']))
 
-            current_choice_element = get_object_or_404(Choice, pk=element_id)
-            if current_choice_element.is_persistent_choice:
+            choice_element = get_object_or_404(Choice, pk=element_id)
+            if choice_element.is_persistent_choice:
                 # Save choice option for persistent elements in a self-check item
                 is_confirmed = request.POST['choice_option'] == '1'
                 logger.debug("Is confirmed {}".format(is_confirmed))
-                check_item = lookup_or_create_self_check_item(None, session_id, element_id, is_confirmed)
+                session = get_object_or_404(CallSession, pk=session_id)
+                check_item = lookup_or_create_self_check_item(None, session, choice_element, is_confirmed)
                 logger.debug("Saved self-check item {}".format(check_item))
 
             return HttpResponseRedirect(request.POST['option_redirect'])
