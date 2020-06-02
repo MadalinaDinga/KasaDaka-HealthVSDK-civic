@@ -37,8 +37,8 @@ def lookup_or_create_self_check_item(self_check_item_id=None, session_id=None, c
             raise ValueError('No answer associated to the self-check item')
 
         self_check_item = SelfCheckItem.objects.create(
-            session_id=session_id,
-            choice_element_id=choice_element_id,
+            session=session_id,
+            choice_element=choice_element_id,
             has_symptom=has_symptom
         )
         self_check_item.save()
