@@ -24,7 +24,6 @@ class SelfCheckItem(models.Model):
     def __str__(self):
         return _('SelfCheckItem: time %s, user %s choice element %s has_symptom %s') \
                % (str(self.session),
-                  str(self.session.user),
                   self.choice_element.symptom.name,
                   self.has_symptom)
 
