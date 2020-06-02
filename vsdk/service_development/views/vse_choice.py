@@ -88,14 +88,14 @@ class ChoiceSelection(TemplateView):
                 logger.error("Incorrect request, redirect_url not set")
                 raise ValueError('Incorrect request, redirect_url not set')
 
-            choice_id = request.POST['choice_id']
+            choice_option = request.POST['choice_option']
             redirect_url = request.POST['option_redirect']
 
-            session = get_object_or_404(CallSession, pk=session_id)
-            logger.debug("Session {}".format(session))
-
-            # Save choice option if choice element for persistent elements
-
+            # TODO: store self-check element knowing the prev element id, answer and session (if persistent)
+            current_choice_element = get_object_or_404(Choice, pk=element_id)  # find prev element id
+            if current_choice_element.is_persistent_choice:
+                # Save choice option if choice element for persistent elements
+                lookup_or_create_self_check_item(session_id, element_id, choice_option == '1')
             return HttpResponseRedirect(redirect_url)
 
         except Exception as ex:

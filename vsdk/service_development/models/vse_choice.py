@@ -2,19 +2,27 @@ from django.db import models
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
 
+from .risks import Risk
+from .symptoms import Symptom
 from .vs_element import VoiceServiceElement, VoiceServiceSubElement
 
 
 class Choice(VoiceServiceElement):
     _urls_name = 'service-development:choice'
     skip_reading_choice_options = models.BooleanField(default=False,
-                                             verbose_name=_('Skip Mentioning Choice Options'),
-                                             help_text=_(
-                                                 'Whether the choice options should be mentioned to the user for the choice element'))
+                                                      verbose_name=_('Skip Mentioning Choice Options'),
+                                                      help_text=_(
+                                                          'Whether the choice options should be mentioned to the user for the choice element'))
     is_persistent_choice = models.BooleanField(default=False,
-                                                 verbose_name=_('Save Choice Option'),
-                                                 help_text=_(
-                                                     'Whether the chosen option should be saved in the database'))
+                                               verbose_name=_('Save Choice Option'),
+                                               help_text=_(
+                                                   'Whether the chosen option should be saved in the database'))
+    symptom = models.ForeignKey(Symptom, on_delete=models.PROTECT, related_name="symptom",
+                                verbose_name=_('Associated symptom'), null=True,
+                                help_text=_('Select the corresponding symptom, if this choice element represents one'))
+    risk = models.ForeignKey(Risk, on_delete=models.PROTECT, related_name="risk",
+                             verbose_name=_('Associated risk'), null=True,
+                             help_text=_('Select the corresponding risk, if this choice element represents one'))
 
     class Meta:
         verbose_name = _('Choice Element')

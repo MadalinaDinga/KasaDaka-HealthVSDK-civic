@@ -95,7 +95,7 @@ class ChoiceOptionsInline(admin.TabularInline):
 
 class ChoiceAdmin(VoiceServiceElementAdmin):
     fieldsets = VoiceServiceElementAdmin.fieldsets + [
-        (_('Configure Choice Element'), {'fields': ['skip_reading_choice_options', 'is_persistent_choice']})]
+        (_('Configure Choice Element'), {'fields': ['skip_reading_choice_options', 'is_persistent_choice', 'symptom', 'risk']})]
 
     inlines = [ChoiceOptionsInline]
 
@@ -213,10 +213,9 @@ class SpokenUserInputAdmin(admin.ModelAdmin):
 
 
 class SelfCheckItemAdmin(admin.ModelAdmin):
-    list_display = ('session', 'symptom', 'risk', 'has_symptom')
-    list_filter = ('symptom', 'risk')
-    fieldsets = [(_('General'), {'fields': ['session', 'symptom', 'risk', 'has_symptom']})]
-    readonly_fields = ('session', 'symptom', 'risk', 'has_symptom')
+    list_display = ('session', 'has_symptom')
+    fieldsets = [(_('General'), {'fields': ['session', 'has_symptom']})]
+    readonly_fields = ('session', 'has_symptom')
     can_delete = False
 
     def has_add_permission(self, request):
