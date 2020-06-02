@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from vsdk.service_development.models import CallSession, Choice
 
 import logging
+
 logger = logging.getLogger("mada")
 
 
@@ -22,10 +23,10 @@ class SelfCheckItem(models.Model):
 
     def __str__(self):
         return _('SelfCheckItem: time %s, user %s choice element %s has_symptom %s') \
-               % self.session.start, \
-               self.session.user, \
-               self.choice_element.symptom.name, \
-               self.has_symptom
+               % (str(self.session),
+                  str(self.session.user),
+                  self.choice_element.symptom.name,
+                  self.has_symptom)
 
 
 def lookup_or_create_self_check_item(self_check_item_id=None, session=None, choice_element=None,
