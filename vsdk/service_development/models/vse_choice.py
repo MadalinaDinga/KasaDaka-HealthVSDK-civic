@@ -18,10 +18,10 @@ class Choice(VoiceServiceElement):
                                                help_text=_(
                                                    'Whether the chosen option should be saved in the database'))
     symptom = models.ForeignKey(Symptom, on_delete=models.PROTECT, related_name="symptom",
-                                verbose_name=_('Associated symptom'), null=True,
+                                verbose_name=_('Associated symptom'), null=True, blank=True,
                                 help_text=_('Select the corresponding symptom, if this choice element represents one'))
     risk = models.ForeignKey(Risk, on_delete=models.PROTECT, related_name="risk",
-                             verbose_name=_('Associated risk'), null=True,
+                             verbose_name=_('Associated risk'), null=True, blank=True,
                              help_text=_('Select the corresponding risk, if this choice element represents one'))
 
     class Meta:
