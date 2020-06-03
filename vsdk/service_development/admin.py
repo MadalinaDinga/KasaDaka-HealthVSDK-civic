@@ -95,7 +95,8 @@ class ChoiceOptionsInline(admin.TabularInline):
 
 class ChoiceAdmin(VoiceServiceElementAdmin):
     fieldsets = VoiceServiceElementAdmin.fieldsets + [
-        (_('Configure Choice Element'), {'fields': ['skip_reading_choice_options', 'is_persistent_choice', 'symptom', 'risk']})]
+        (_('Configure Choice Element'),
+         {'fields': ['skip_reading_choice_options', 'is_persistent_choice', 'symptom', 'risk']})]
 
     inlines = [ChoiceOptionsInline]
 
@@ -213,22 +214,39 @@ class SpokenUserInputAdmin(admin.ModelAdmin):
 
 
 class SelfCheckItemAdmin(admin.ModelAdmin):
-    list_display = ('session', 'get_self_check_item_name', 'has_symptom')
-    fieldsets = [(_('General'), {'fields': ['session', 'get_self_check_item_name', 'has_symptom']})]
-    readonly_fields = ('session', 'get_self_check_item_name', 'has_symptom')
+    list_display = ('get_user', 'get_session_start_date', 'get_self_check_item_name', 'get_answer')
+    readonly_fields = ('session', 'get_self_check_item_name', 'has_symptom', 'choice_element')
+    list_filter = ['choice_element__symptom', 'choice_element__risk']
     can_delete = False
 
     def has_add_permission(self, request):
         return False
+
+    def get_user(self, obj):
+        if obj.session.user:
+            return "%s" % (str(obj.session.user))
+        else:
+            return "%s" % (str(obj.session.caller_id))
+    get_user.short_description = 'User'
+    get_user.admin_order_field = 'session'
+
+    def get_session_start_date(self, obj):
+        return obj.session.formatted_time
+    get_session_start_date.short_description = 'Date'
+    get_session_start_date.admin_order_field = 'session'
 
     def get_self_check_item_name(self, obj):
         if obj.choice_element.symptom:
             return obj.choice_element.symptom
         if obj.choice_element.risk:
             return obj.choice_element.risk
+    get_self_check_item_name.short_description = 'Name'  # Rename column head
+    get_self_check_item_name.admin_order_field = 'choice_element'  # Allows column order sorting
 
-    get_self_check_item_name.short_description = 'Self-check item name'
-    get_self_check_item_name.admin_order_field = 'choice_element'
+    def get_answer(self, obj):
+        return obj.has_symptom
+    get_answer.short_description = 'Reported'
+    get_answer.boolean = True
 
 
 # Register your models here.

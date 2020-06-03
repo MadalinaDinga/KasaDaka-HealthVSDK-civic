@@ -32,6 +32,13 @@ class CallSession(models.Model):
             return "%s (%s %s)" % (str(self.caller_id), str(start_date), str(start_time))
 
     @property
+    def formatted_time(self):
+        from django.template import defaultfilters
+        start_date = defaultfilters.date(self.start, "SHORT_DATE_FORMAT")
+        start_time = defaultfilters.time(self.start, "TIME_FORMAT")
+        return "%s %s" % (str(start_date), str(start_time))
+
+    @property
     def language(self):
         """
         Tries to determine the language of the session, taking into account
