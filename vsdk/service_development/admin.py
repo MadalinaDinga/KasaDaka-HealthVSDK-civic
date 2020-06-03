@@ -213,13 +213,22 @@ class SpokenUserInputAdmin(admin.ModelAdmin):
 
 
 class SelfCheckItemAdmin(admin.ModelAdmin):
-    list_display = ('session', 'has_symptom')
-    fieldsets = [(_('General'), {'fields': ['session', 'has_symptom']})]
-    readonly_fields = ('session', 'has_symptom')
+    list_display = ('session', 'get_self_check_item_name', 'has_symptom')
+    fieldsets = [(_('General'), {'fields': ['session', 'get_self_check_item_name', 'has_symptom']})]
+    readonly_fields = ('session', 'get_self_check_item_name', 'has_symptom')
     can_delete = False
 
     def has_add_permission(self, request):
         return False
+
+    def get_self_check_item_name(self, obj):
+        if obj.choice_element.symptom:
+            return obj.choice_element.symptom
+        if obj.choice_element.risk:
+            return obj.choice_element.risk
+
+    get_self_check_item_name.short_description = 'Self-check item name'
+    get_self_check_item_name.admin_order_field = 'choice_element'
 
 
 # Register your models here.

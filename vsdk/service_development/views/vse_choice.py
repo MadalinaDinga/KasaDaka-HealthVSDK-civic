@@ -97,6 +97,7 @@ class ChoiceSelection(TemplateView):
                 logger.debug("Is confirmed {}".format(is_confirmed))
                 session = get_object_or_404(CallSession, pk=session_id)
                 logger.debug("Linked session {}".format(session))
+                logger.debug("Session user {}".format(session.user))
                 check_item = lookup_or_create_self_check_item(None, session, choice_element, is_confirmed)
                 logger.debug("Saved self-check item {}".format(check_item))
 
