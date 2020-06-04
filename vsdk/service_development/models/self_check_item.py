@@ -23,7 +23,7 @@ class SelfCheckItem(models.Model):
     def __str__(self):
         return _('SelfCheckItem: session %s, choice element %s has_symptom %s') \
                % (str(self.session),
-                  self.choice_element.symptom.name,
+                  self.choice_element,
                   self.has_symptom)
 
 
