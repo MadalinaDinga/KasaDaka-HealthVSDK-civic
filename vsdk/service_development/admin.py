@@ -284,7 +284,7 @@ class DiagnosisAdmin(admin.ModelAdmin):
     can_delete = False
 
     def has_add_permission(self, request):
-        return False
+        return True
 
 
 # Register your models here.
