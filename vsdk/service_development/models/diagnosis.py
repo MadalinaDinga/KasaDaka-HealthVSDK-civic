@@ -86,3 +86,7 @@ class DiagnosisConfigParameters(models.Model):
 
     class Meta:
         verbose_name_plural = _('Diagnosis Configurable Parameters')
+
+    def __str__(self):
+        return _('Infected probability benchmark: %s - symptoms count benchmark: %s') % (
+            self.infected_probability_benchmark, self.symptom_no_benchmark)

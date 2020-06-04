@@ -72,8 +72,10 @@ def message_presentation(request, element_id, session_id):
         logger.debug("User reported risks count {}".format(risks_count))
 
         # compare wavg and sympt no and retrieve result
-        is_symptom_count_above_benchmark = symptoms_count > DiagnosisConfigParameters.objects.all().first().symptom_no_benchmark
-        is_wavg_above_benchmark = symptoms__wavg > DiagnosisConfigParameters.objects.all().first().infected_probability_benchmark
+        diagnostic_params = DiagnosisConfigParameters.objects.all()[1]
+        logger.debug("Configuration {}".format(diagnostic_params))
+        is_symptom_count_above_benchmark = symptoms_count > diagnostic_params.symptom_no_benchmark
+        is_wavg_above_benchmark = symptoms__wavg > diagnostic_params.infected_probability_benchmark
         logger.debug("Symptom_count {} - benchmark {}".format(is_symptom_count_above_benchmark, DiagnosisConfigParameters.symptom_no_benchmark))
         logger.debug("WAVG {} - benchmark {}".format(is_wavg_above_benchmark, DiagnosisConfigParameters.infected_probability_benchmark))
 
