@@ -1,8 +1,11 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.translation import ugettext_lazy as _
 
 from vsdk.service_development.models import CallSession
+
+import logging
+logger = logging.getLogger("mada")
 
 
 class ResultItem(models.Model):
@@ -34,7 +37,7 @@ class ResultItem(models.Model):
         verbose_name=_('Is testing recommended'),
         help_text=_('Whether testing is recommended.'),
         null=True, blank=True)
-    is_infected_confirmation = models.BooleanField(
+    testing_confirmation = models.BooleanField(
         verbose_name=_('Testing result'),
         help_text=_('Whether the person tested positive for COVID-19.'),
         null=True, blank=True)
@@ -44,14 +47,34 @@ class ResultItem(models.Model):
 
     def __str__(self):
         return _('Result: %s, infected prediction: %s, confirmed: %s, testing result: %s') % (
-            self.session, self.has_infection_predicted,
-            self.has_infection_confirmed is not None,
-            self.has_infection_confirmed)
+            self.session, self.is_infected_prediction,
+            self.testing_confirmation is not None,
+            self.testing_confirmation)
 
 
-class Diagnosis(models.Model):
+def create_result_item(session=None, symptom_no=None, risk_no=None, is_exposed=None, infected_probability=None,
+                       is_infected_prediction=None, testing_recommended=None):
+
+    if session is None:
+        raise ValueError('Session ID missing for result item')
+
+    result_item = ResultItem.objects.create(
+        session=session,
+        symptom_no=symptom_no,
+        risk_no=risk_no,
+        is_exposed=is_exposed,
+        infected_probability=infected_probability,
+        is_infected_prediction=is_infected_prediction,
+        testing_recommended=testing_recommended
+    )
+    logger.debug("Saving result item - {}".format(result_item))
+    result_item.save()
+    return result_item
+
+
+class DiagnosisConfigParameters(models.Model):
     """
-       An entity containing the outcome computation configurable parameters and a diagnostic prediction utility.
+       An entity containing the diagnosis configurable parameters and infection prediction helpers.
     """
     infected_probability_benchmark = models.FloatField(null=True, blank=True,
                                                        validators=[MinValueValidator(0), MaxValueValidator(100)],
@@ -62,5 +85,4 @@ class Diagnosis(models.Model):
                                                            "Point of reference against which the number of reported symptoms per session is computed and conclusions may be drawn whether the person is infected or not."))
 
     class Meta:
-        verbose_name_plural = _('Outcome Configuration')
-
+        verbose_name_plural = _('Diagnosis Configurable Parameters')

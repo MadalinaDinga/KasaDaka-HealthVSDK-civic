@@ -3,7 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
 from .vs_element import VoiceServiceElement
-from .vse_result_message import ResultItem
 
 
 class MessagePresentation(VoiceServiceElement):
@@ -21,8 +20,9 @@ class MessagePresentation(VoiceServiceElement):
         related_name='%(app_label)s_%(class)s_related',
         verbose_name=_('Redirect element'),
         help_text=_("The element to redirect to after the message has been played."))
-    redirects_to_result = models.BooleanField(verbose_name=_('Compute diagnosis and redirect to self-check result element.'),
-                                          default=False)
+    redirects_to_result = models.BooleanField(
+        verbose_name=_('Compute diagnosis and redirect to self-check result element.'),
+        default=False)
 
     class Meta:
         verbose_name = _('Message Presentation Element')

@@ -10,4 +10,4 @@ from .user_input import *
 from .symptoms import *
 from .risks import *
 from .self_check_item import *
-from .vse_result_message import *
+from .diagnosis import *

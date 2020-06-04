@@ -254,14 +254,14 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
 class ResultItemAdmin(admin.ModelAdmin):
     list_display = (
         'get_user', 'get_session_start_date', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
-        'testing_recommended', 'is_infected_confirmation')
+        'testing_recommended', 'testing_confirmation')
     readonly_fields = (
         'session', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
-        'testing_recommended', 'is_infected_confirmation')
+        'testing_recommended')
     can_delete = False
 
     def has_add_permission(self, request):
-        return True  # TODO: will be False in the end (True for testing purpose)
+        return False
 
     def get_user(self, obj):
         if obj.session.user:
@@ -303,4 +303,4 @@ admin.site.register(Symptom)
 admin.site.register(Risk)
 admin.site.register(SelfCheckItem, SelfCheckItemAdmin)
 admin.site.register(ResultItem, ResultItemAdmin)
-admin.site.register(Diagnosis, DiagnosisAdmin)
+admin.site.register(DiagnosisConfigParameters, DiagnosisAdmin)

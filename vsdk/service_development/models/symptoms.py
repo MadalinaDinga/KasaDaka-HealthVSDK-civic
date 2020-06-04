@@ -19,7 +19,7 @@ class Symptom(models.Model):
                                                   "The percentage of people with non-severe COVID-19 reporting the symptom."))
 
     @property
-    def percentage(self):
+    def symptom_occurrence_percent(self):
         """
         Returns the average of percentage severe and percentage nonsevere.
         """

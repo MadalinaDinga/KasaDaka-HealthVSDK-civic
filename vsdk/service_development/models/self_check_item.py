@@ -5,13 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 from vsdk.service_development.models import CallSession, Choice
 
 import logging
-
 logger = logging.getLogger("mada")
 
 
 class SelfCheckItem(models.Model):
     """
-    User that belongs to a Voice Service on this system
+    A self-check item is a self-reported item, either a symptom, or a risk factor.
     """
     session = models.ForeignKey(CallSession, on_delete=models.CASCADE, related_name="check_item_session")
     choice_element = models.ForeignKey(Choice, on_delete=models.PROTECT, related_name="choice_element",
@@ -19,7 +18,7 @@ class SelfCheckItem(models.Model):
     has_symptom = models.BooleanField(null=True)
 
     class Meta:
-        verbose_name_plural = _('Self-Reported Items (Symptoms and Risks)')
+        verbose_name_plural = _('Self-Reported Items')
 
     def __str__(self):
         return _('SelfCheckItem: session %s, choice element %s has_symptom %s') \
