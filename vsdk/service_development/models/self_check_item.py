@@ -19,7 +19,7 @@ class SelfCheckItem(models.Model):
     has_symptom = models.BooleanField(null=True)
 
     class Meta:
-        verbose_name = _('Self-Reported Symptoms and Risk')
+        verbose_name_plural = _('Self-Reported Items (Symptoms and Risks)')
 
     def __str__(self):
         return _('SelfCheckItem: session %s, choice element %s has_symptom %s') \

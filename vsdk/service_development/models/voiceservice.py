@@ -1,15 +1,10 @@
-from django.conf import settings
 from django.db import models
-from django.utils import timezone
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
-from .voicelabel import VoiceLabel, Language, VoiceFragment
+from .voicelabel import Language
 from .vs_element import VoiceServiceElement
 
 

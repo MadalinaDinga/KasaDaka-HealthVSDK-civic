@@ -25,4 +25,10 @@ def message_presentation(request, element_id, session_id):
     session.record_step(message_presentation_element)
     context = message_presentation_generate_context(message_presentation_element, session)
 
+    # TODO: if final self-check choice element, then compute result and redirect to the corresponding message presentation element
+    #  Create Result object which extends Message, with extra fields
+    #  symptom_no, risk_no, covid_probability p% (m.a.p. with existing symptoms) < 50% ?, has_exposure, linked_session,
+    #  benchmark_probability, symptom_no_benchmark,
+    #  predicted_result, actual_result
+
     return render(request, 'message_presentation.xml', context, content_type='text/xml')

@@ -1,8 +1,6 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
 
 from vsdk import settings
 from .models import *
@@ -194,7 +192,7 @@ class CallSessionAdmin(admin.ModelAdmin):
 
 class MessagePresentationAdmin(VoiceServiceElementAdmin):
     fieldsets = VoiceServiceElementAdmin.fieldsets + [
-        (_('Message Presentation'), {'fields': ['_redirect', 'final_element']})]
+        (_('Message Presentation'), {'fields': ['_redirect', 'redirects_to_result', 'final_element']})]
 
 
 class KasaDakaUserAdmin(admin.ModelAdmin):
@@ -227,11 +225,13 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
             return "%s" % (str(obj.session.user))
         else:
             return "%s" % (str(obj.session.caller_id))
+
     get_user.short_description = 'User'
     get_user.admin_order_field = 'session'
 
     def get_session_start_date(self, obj):
         return obj.session.formatted_time
+
     get_session_start_date.short_description = 'Date'
     get_session_start_date.admin_order_field = 'session'
 
@@ -240,13 +240,51 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
             return obj.choice_element.symptom
         if obj.choice_element.risk:
             return obj.choice_element.risk
+
     get_self_check_item_name.short_description = 'Name'  # Rename column head
     get_self_check_item_name.admin_order_field = 'choice_element'  # Allows column order sorting
 
     def get_answer(self, obj):
         return obj.has_symptom
+
     get_answer.short_description = 'Reported'
     get_answer.boolean = True
+
+
+class ResultItemAdmin(admin.ModelAdmin):
+    list_display = (
+        'get_user', 'get_session_start_date', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
+        'testing_recommended', 'is_infected_confirmation')
+    readonly_fields = (
+        'session', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
+        'testing_recommended', 'is_infected_confirmation')
+    can_delete = False
+
+    def has_add_permission(self, request):
+        return True  # TODO: will be False in the end (True for testing purpose)
+
+    def get_user(self, obj):
+        if obj.session.user:
+            return "%s" % (str(obj.session.user))
+        else:
+            return "%s" % (str(obj.session.caller_id))
+
+    get_user.short_description = 'User'
+    get_user.admin_order_field = 'session'
+
+    def get_session_start_date(self, obj):
+        return obj.session.formatted_time
+
+    get_session_start_date.short_description = 'Date'
+    get_session_start_date.admin_order_field = 'session'
+
+
+class DiagnosisAdmin(admin.ModelAdmin):
+    list_display = ('infected_probability_benchmark', 'symptom_no_benchmark')
+    can_delete = False
+
+    def has_add_permission(self, request):
+        return False
 
 
 # Register your models here.
@@ -264,3 +302,5 @@ admin.site.register(Record)
 admin.site.register(Symptom)
 admin.site.register(Risk)
 admin.site.register(SelfCheckItem, SelfCheckItemAdmin)
+admin.site.register(ResultItem, ResultItemAdmin)
+admin.site.register(Diagnosis, DiagnosisAdmin)
