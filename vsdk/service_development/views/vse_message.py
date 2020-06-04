@@ -51,6 +51,7 @@ def message_presentation(request, element_id, session_id):
         symptoms__wavg_denominator = 0
         for check in session_self_check_items_set:
             choice = check.choice_element
+            logger.debug("Choice item {}".format(choice))
             if choice.symptom and not choice.risk:  # process symptom
                 symptoms_count += 1
                 sympt_id = choice.symptom.id
@@ -64,7 +65,8 @@ def message_presentation(request, element_id, session_id):
             if not check.choice_element.symptom and check.choice_element.risk:  # process risk
                 risks_count += 1
 
-        symptoms__wavg /= symptoms__wavg_denominator
+        if symptoms_count > 0:
+            symptoms__wavg /= symptoms__wavg_denominator
         logger.debug("WAVG - estimated probability {}".format(symptoms__wavg))
         logger.debug("User reported symptoms count {}".format(symptoms_count))
         logger.debug("User reported risks count {}".format(risks_count))
