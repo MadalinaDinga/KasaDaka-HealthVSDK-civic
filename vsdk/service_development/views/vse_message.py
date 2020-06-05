@@ -72,7 +72,7 @@ def message_presentation(request, element_id, session_id):
         logger.debug("User reported risks count {}".format(risks_count))
 
         # compare wavg and sympt no with configuration benchmarks
-        diagnostic_params = DiagnosisConfigParameters.objects.all()[1]
+        diagnostic_params = DiagnosisConfigParameters.objects.all()
         logger.debug("Configuration {}".format(diagnostic_params))
 
         is_symptom_count_above_benchmark = symptoms_count > diagnostic_params.symptom_no_benchmark
