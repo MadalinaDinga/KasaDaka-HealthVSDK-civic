@@ -7,7 +7,25 @@ plays back a message, then sends the user to the redirect
 <form>
 <block>
 <prompt>
-<audio src="{{ language.get_result_interface_voice_label_url_dict.result_negative_voice_label }}"/>
+    {% comment %} Predicted diagnosis {% endcomment %}
+    {% if is_infected_prediction %}
+        <audio src="{{ language.get_result_interface_voice_label_url_dict.result_positive_voice_label }}"/>
+    {% else %}
+        <audio src="{{ language.get_result_interface_voice_label_url_dict.result_negative_voice_label }}"/>
+    {% endif %}
+    {% comment %} Testing recommendation {% endcomment %}
+     {% if is_testing_recommended %}
+        <audio src="{{ language.get_result_interface_voice_label_url_dict.yes_testing_voice_label }}"/>
+    {% else %}
+        <audio src="{{ language.get_result_interface_voice_label_url_dict.no_testing_voice_label }}"/>
+    {% endif %}
+    {% comment %} Other warnings or advice {% endcomment %}
+    {% if has_risk %}
+        <audio src="{{ language.get_result_interface_voice_label_url_dict.yes_risks_voice_label }}"/>
+    {% endif %}
+    {% if has_exposure %}
+        <audio src="{{ language.get_result_interface_voice_label_url_dict.yes_contact_voice_label }}"/>
+    {% endif %}
 </prompt>
 {% if redirect_url %}
 <goto next="{{ redirect_url }}"/>

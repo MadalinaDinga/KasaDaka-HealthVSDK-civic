@@ -20,7 +20,7 @@ def message_presentation_generate_context(message_presentation_element, session)
 
 
 def message_presentation_generate_result_context(message_presentation_element, is_infected_prediction,
-                                                 is_testing_recommended, has_risk, session):
+                                                 is_testing_recommended, has_risk, is_exposed, session):
     language = session.language
     redirect_url = message_presentation_get_redirect_url(message_presentation_element, session)
     context = {
@@ -28,6 +28,7 @@ def message_presentation_generate_result_context(message_presentation_element, i
         'is_infected_prediction': is_infected_prediction,
         'is_testing_recommended': is_testing_recommended,
         'has_risk': has_risk,
+        'has_exposure': is_exposed,
         'redirect_url': redirect_url
     }
     return context
@@ -46,7 +47,7 @@ def message_presentation(request, element_id, session_id):
         context = message_presentation_generate_result_context(message_presentation_element,
                                                                result_item.is_infected_prediction,
                                                                result_item.testing_recommended, result_item.risk_no > 0,
-                                                               session)
+                                                               result_item.is_exposed, session)
         return render(request, 'retrieve_result.xml', context, content_type='text/xml')
 
     return render(request, 'message_presentation.xml', context, content_type='text/xml')
