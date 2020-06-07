@@ -21,10 +21,10 @@ def message_presentation_generate_context(message_presentation_element, session)
 
 def message_presentation_generate_result_context(message_presentation_element, is_infected_prediction,
                                                  is_testing_recommended, has_risk, session):
-    result = ResultConfig.objects.all().first()
+    language = session.language
     redirect_url = message_presentation_get_redirect_url(message_presentation_element, session)
     context = {
-        'result': result,
+        'language': language,
         'is_infected_prediction': is_infected_prediction,
         'is_testing_recommended': is_testing_recommended,
         'has_risk': has_risk,

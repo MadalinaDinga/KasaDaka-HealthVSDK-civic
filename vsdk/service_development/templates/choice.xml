@@ -33,17 +33,14 @@
               <if cond="choice == '{{ forloop.counter }}'">
                   <assign name="choice_option" expr="'{{ forloop.counter }}'"/>
                   <assign name="option_redirect" expr="'{{ option_redirect }}'"/>
-                {# <goto next="{{ option_redirect }}"/>#}
               {% else %}
               <elseif cond="choice == '{{ forloop.counter }}'" />
                   <assign name="choice_option" expr="'{{ forloop.counter }}'"/>
                   <assign name="option_redirect" expr="'{{ option_redirect }}'"/>
-                {# <goto next="{{ option_redirect }}"/>#}
               {% endif %}
             {% endfor %}
             <else/>
             </if>
-
             <goto next="#submit_form"/>
           </filled>
     </field>

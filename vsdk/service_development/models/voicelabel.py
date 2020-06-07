@@ -151,33 +151,69 @@ class Language(models.Model):
                              related_name='next_voice_label',
                              help_text=_("Next form field"))
     authfail = models.ForeignKey('VoiceLabel',
-                             null=True,
-                             blank=True,
-                             on_delete=models.PROTECT,
-                             verbose_name='Authentication fail label',
-                             related_name='authfail_label',
-                             help_text=_("Authentication failure message"))
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.PROTECT,
+                                 verbose_name='Authentication fail label',
+                                 related_name='authfail_label',
+                                 help_text=_("Authentication failure message"))
     reasonfail = models.ForeignKey('VoiceLabel',
-                                 null=True,
-                                 blank=True,
-                                 on_delete=models.PROTECT,
-                                 verbose_name='Authentication fail reason',
-                                 related_name='reasonfail_label',
-                                 help_text=_("Authentication reason for failure message"))
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.PROTECT,
+                                   verbose_name='Authentication fail reason',
+                                   related_name='reasonfail_label',
+                                   help_text=_("Authentication reason for failure message"))
     callagain = models.ForeignKey('VoiceLabel',
-                                 null=True,
-                                 blank=True,
-                                 on_delete=models.PROTECT,
-                                 verbose_name='Call again',
-                                 related_name='callagain_label',
-                                 help_text=_("Call again message"))
+                                  null=True,
+                                  blank=True,
+                                  on_delete=models.PROTECT,
+                                  verbose_name='Call again',
+                                  related_name='callagain_label',
+                                  help_text=_("Call again message"))
     authsuccess = models.ForeignKey('VoiceLabel',
-                                 null=True,
-                                 blank=True,
-                                 on_delete=models.PROTECT,
-                                 verbose_name='Authentication success label',
-                                 related_name='authsuccess_label',
-                                 help_text=_("Authentication success message"))
+                                    null=True,
+                                    blank=True,
+                                    on_delete=models.PROTECT,
+                                    verbose_name='Authentication success label',
+                                    related_name='authsuccess_label',
+                                    help_text=_("Authentication success message"))
+    result_negative_voice_label = models.ForeignKey('VoiceLabel',
+                                                    blank=True, null=True,
+                                                    on_delete=models.PROTECT,
+                                                    verbose_name=_('User is not suspect voice label'),
+                                                    related_name='result_negative_voice_label',
+                                                    help_text=_("A Voice Label for negative diagnosis result"))
+    result_positive_voice_label = models.ForeignKey('VoiceLabel',
+                                                    blank=True, null=True,
+                                                    on_delete=models.PROTECT,
+                                                    verbose_name=_('User is suspect voice label'),
+                                                    related_name='result_positive_voice_label',
+                                                    help_text=_("A Voice Label for positive diagnosis result"))
+    no_testing_voice_label = models.ForeignKey('VoiceLabel',
+                                               blank=True, null=True,
+                                               on_delete=models.PROTECT,
+                                               verbose_name=_('Testing not necessary voice label'),
+                                               related_name='no_testing_voice_label',
+                                               help_text=_("A Voice Label for no testing necessary"))
+    yes_testing_voice_label = models.ForeignKey('VoiceLabel',
+                                                blank=True, null=True,
+                                                on_delete=models.PROTECT,
+                                                verbose_name=_('Testing recommended voice label'),
+                                                related_name='yes_testing_voice_label',
+                                                help_text=_("A Voice Label for testing needed"))
+    yes_risks_voice_label = models.ForeignKey('VoiceLabel',
+                                              blank=True, null=True,
+                                              on_delete=models.PROTECT,
+                                              verbose_name=_('Risks warning voice label'),
+                                              related_name='yes_risks_voice_label',
+                                              help_text=_("A Voice Label for risks warning"))
+    yes_contact_voice_label = models.ForeignKey('VoiceLabel',
+                                                blank=True, null=True,
+                                                on_delete=models.PROTECT,
+                                                verbose_name=_('Exposure warning voice label'),
+                                                related_name='yes_contact_voice_label',
+                                                help_text=_("A Voice Label for exposure or contact warning"))
 
     class Meta:
         verbose_name = _('Language')
@@ -237,6 +273,25 @@ class Language(models.Model):
             interface_voice_labels[k] = v.get_voice_fragment_url(self)
 
         return interface_voice_labels
+
+    @property
+    def get_result_interface_voice_label_url_dict(self):
+        """
+        Returns a dictionary containing all URLs of Voice
+        Fragments of the hardcoded result interface audio fragments.
+        """
+        result_interface_voice_labels = {
+            'result_positive_voice_label': self.result_positive_voice_label,
+            'result_negative_voice_label': self.result_negative_voice_label,
+            'no_testing_voice_label': self.no_testing_voice_label,
+            'yes_testing_voice_label': self.yes_testing_voice_label,
+            'yes_risks_voice_label': self.yes_risks_voice_label,
+            'exposure or contact': self.yes_contact_voice_label
+        }
+        for k, v in result_interface_voice_labels.items():
+            result_interface_voice_labels[k] = v.get_voice_fragment_url(self)
+
+        return result_interface_voice_labels
 
 
 class VoiceFragment(models.Model):

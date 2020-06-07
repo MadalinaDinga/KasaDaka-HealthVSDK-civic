@@ -281,13 +281,11 @@ class ResultItemAdmin(admin.ModelAdmin):
 
 
 class ResultConfigAdmin(admin.ModelAdmin):
-    list_display = ('infected_probability_benchmark', 'symptom_no_benchmark', 'result_negative_voice_label',
-                    'result_positive_voice_label', 'no_testing_voice_label', 'yes_testing_voice_label',
-                    'yes_risks_voice_label')
+    list_display = ('infected_probability_benchmark', 'symptom_no_benchmark')
     can_delete = False
 
     def has_add_permission(self, request):
-        return False
+        return True
 
 
 # Register your models here

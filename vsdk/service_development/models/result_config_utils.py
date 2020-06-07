@@ -20,37 +20,6 @@ class ResultConfig(models.Model):
     symptom_no_benchmark = models.PositiveIntegerField(null=True, blank=True,
                                                        help_text=_(
                                                            "Point of reference against which the number of reported symptoms per session is computed and conclusions may be drawn whether the person is infected or not."))
-    result_negative_voice_label = models.ForeignKey('VoiceLabel',
-                                                    on_delete=models.PROTECT,
-                                                    verbose_name=_('User is not suspect voice label'),
-                                                    related_name='result_negative_voice_label',
-                                                    help_text=_("A Voice Label for negative diagnosis result"))
-    result_positive_voice_label = models.ForeignKey('VoiceLabel',
-                                                    on_delete=models.PROTECT,
-                                                    verbose_name=_('User is suspect voice label'),
-                                                    related_name='result_positive_voice_label',
-                                                    help_text=_("A Voice Label for positive diagnosis result"))
-    no_testing_voice_label = models.ForeignKey('VoiceLabel',
-                                               on_delete=models.PROTECT,
-                                               verbose_name=_('Testing not necessary voice label'),
-                                               related_name='no_testing_voice_label',
-                                               help_text=_("A Voice Label for no testing necessary"))
-    yes_testing_voice_label = models.ForeignKey('VoiceLabel',
-                                                on_delete=models.PROTECT,
-                                                verbose_name=_('Testing recommended voice label'),
-                                                related_name='yes_testing_voice_label',
-                                                help_text=_("A Voice Label for testing needed"))
-    yes_risks_voice_label = models.ForeignKey('VoiceLabel',
-                                              on_delete=models.PROTECT,
-                                              verbose_name=_('Risks warning voice label'),
-                                              related_name='yes_risks_voice_label',
-                                              help_text=_("A Voice Label for risks warning"))
-    yes_contact_voice_label = models.ForeignKey('VoiceLabel',
-                                                on_delete=models.PROTECT,
-                                                verbose_name=_('Exposure warning voice label'),
-                                                related_name='yes_contact_voice_label',
-                                                help_text=_("A Voice Label for exposure or contact warning"),
-                                                blank=True, null=True)
 
     class Meta:
         verbose_name_plural = _('Result Configuration')
@@ -58,25 +27,6 @@ class ResultConfig(models.Model):
     def __str__(self):
         return _('Infected probability benchmark: %s - symptoms count benchmark: %s') % (
             self.infected_probability_benchmark, self.symptom_no_benchmark)
-
-    @property
-    def get_result_interface_voice_label_url_dict(self):
-        """
-        Returns a dictionary containing all URLs of Voice
-        Fragments of the hardcoded result interface audio fragments.
-        """
-        result_interface_voice_labels = {
-            'result_positive_voice_label': self.result_positive_voice_label,
-            'result_negative_voice_label': self.result_negative_voice_label,
-            'no_testing_voice_label': self.no_testing_voice_label,
-            'yes_testing_voice_label': self.yes_testing_voice_label,
-            'yes_risks_voice_label': self.yes_risks_voice_label,
-            'exposure or contact': self.yes_contact_voice_label
-        }
-        for k, v in result_interface_voice_labels.items():
-            result_interface_voice_labels[k] = v.get_voice_fragment_url(self)
-
-        return result_interface_voice_labels
 
 
 # Utils - methods for diagnosis computation
