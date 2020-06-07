@@ -46,7 +46,7 @@ class ResultConfig(models.Model):
                                               help_text=_("A Voice Label for notice of risks"))
 
     class Meta:
-        verbose_name_plural = _('Diagnosis Configurable Parameters')
+        verbose_name_plural = _('Result Configuration')
 
     def __str__(self):
         return _('Infected probability benchmark: %s - symptoms count benchmark: %s') % (
