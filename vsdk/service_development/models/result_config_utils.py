@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from vsdk.service_development.models import Symptom, SelfCheckItem, update_or_create_result_item_for_session
 
 import logging
+
 logger = logging.getLogger("mada")
 
 
@@ -31,9 +32,9 @@ class ResultConfig(models.Model):
                                                     help_text=_("A Voice Label for positive diagnosis result"))
     no_testing_voice_label = models.ForeignKey('VoiceLabel',
                                                on_delete=models.PROTECT,
-                                               verbose_name=_('No testing needed voice label'),
+                                               verbose_name=_('Testing not necessary voice label'),
                                                related_name='no_testing_voice_label',
-                                               help_text=_("A Voice Label for no testing needed"))
+                                               help_text=_("A Voice Label for no testing necessary"))
     yes_testing_voice_label = models.ForeignKey('VoiceLabel',
                                                 on_delete=models.PROTECT,
                                                 verbose_name=_('Testing recommended voice label'),
@@ -41,9 +42,15 @@ class ResultConfig(models.Model):
                                                 help_text=_("A Voice Label for testing needed"))
     yes_risks_voice_label = models.ForeignKey('VoiceLabel',
                                               on_delete=models.PROTECT,
-                                              verbose_name=_('Notice of risks voice label'),
+                                              verbose_name=_('Risks warning voice label'),
                                               related_name='yes_risks_voice_label',
-                                              help_text=_("A Voice Label for notice of risks"))
+                                              help_text=_("A Voice Label for risks warning"))
+    yes_contact_voice_label = models.ForeignKey('VoiceLabel',
+                                                on_delete=models.PROTECT,
+                                                verbose_name=_('Exposure warning voice label'),
+                                                related_name='yes_contact_voice_label',
+                                                help_text=_("A Voice Label for exposure or contact warning"),
+                                                blank=True, null=True)
 
     class Meta:
         verbose_name_plural = _('Result Configuration')
@@ -64,6 +71,7 @@ class ResultConfig(models.Model):
             'no_testing_voice_label': self.no_testing_voice_label,
             'yes_testing_voice_label': self.yes_testing_voice_label,
             'yes_risks_voice_label': self.yes_risks_voice_label,
+            'exposure or contact': self.yes_contact_voice_label
         }
         for k, v in result_interface_voice_labels.items():
             result_interface_voice_labels[k] = v.get_voice_fragment_url(self)
