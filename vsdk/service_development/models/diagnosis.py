@@ -58,10 +58,12 @@ def update_is_exposed_for_session(session=None, is_exposed=None):
     result_item = None
     try:
         result_item = get_object_or_404(ResultItem, session=session)
-    except HTTPError as e:
+        logger.debug("Result item - {}".format(result_item))
+    except Exception as e:
         print("Could not retrieve result for session - {e}", e)
         result_item = ResultItem.objects.create()  # create result item for session
         result_item.session = session
+        logger.debug("Created new result item - {}".format(result_item))
     finally:
         if not result_item.is_exposed:  # can be updated only if False
             result_item.is_exposed = is_exposed
