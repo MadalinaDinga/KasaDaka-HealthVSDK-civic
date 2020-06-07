@@ -55,11 +55,12 @@ class ResultItem(models.Model):
 
 
 def update_is_exposed_for_session(session=None, is_exposed=None):
+    result_item = None
     try:
         result_item = get_object_or_404(ResultItem, session=session)
     except HTTPError as e:
         print("Could not retrieve result for session - {e}", e)
-        result_item = ResultItem.objects.create()
+        result_item = ResultItem.objects.create()  # create result item for session
         result_item.session = session
     finally:
         if not is_exposed:  # can be updated only if False
