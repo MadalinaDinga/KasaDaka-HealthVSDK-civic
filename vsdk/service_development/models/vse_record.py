@@ -6,6 +6,7 @@ from vsdk.service_development.models import VoiceLabel
 from .vs_element import VoiceServiceElement
 from .user_input import UserInputCategory
 
+
 class Record(VoiceServiceElement):
     """
         An element that records user input to a sound file.
@@ -15,18 +16,21 @@ class Record(VoiceServiceElement):
 
     not_heard_voice_label = models.ForeignKey(
         VoiceLabel,
-        verbose_name = _('No response voice label'),
-        help_text = _('The voice label that is played when the system does not recognize the user saying anything. Example: "We did not hear anything, please speak your message."'),
+        verbose_name=_('No response voice label'),
+        help_text=_(
+            'The voice label that is played when the system does not recognize the user saying anything. Example: "We did not hear anything, please speak your message."'),
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='not_heard_voice_label'
     )
-    repeat_recording_to_caller = models.BooleanField(_('Repeat the recording to the caller before asking for confirmation'), default=True)
+    repeat_recording_to_caller = models.BooleanField(
+        _('Repeat the recording to the caller before asking for confirmation'), default=True)
     repeat_voice_label = models.ForeignKey(
         VoiceLabel,
-        verbose_name = _('Repeat input voice label'),
-        help_text = _('The voice label that is played before the system repeats the user input. Example: "Your message is:"'),
+        verbose_name=_('Repeat input voice label'),
+        help_text=_(
+            'The voice label that is played before the system repeats the user input. Example: "Your message is:"'),
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -36,8 +40,9 @@ class Record(VoiceServiceElement):
         _('Ask the caller to confirm their recording'), default=True)
     ask_confirmation_voice_label = models.ForeignKey(
         VoiceLabel,
-        verbose_name = _('Ask for confirmation voice label'),
-        help_text = _('The voice label that asks the user to confirm their pinput. Example: "Are you satisfied with your recording? Press 1 to confirm, or press 2 to retry."'),
+        verbose_name=_('Ask for confirmation voice label'),
+        help_text=_(
+            'The voice label that asks the user to confirm their pinput. Example: "Are you satisfied with your recording? Press 1 to confirm, or press 2 to retry."'),
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -45,8 +50,9 @@ class Record(VoiceServiceElement):
     )
     final_voice_label = models.ForeignKey(
         VoiceLabel,
-        verbose_name = _('Final voice label'),
-        help_text = _('The voice label that is played when the user has completed the recording process. Example: "Thank you for your message! The message has been stored successfully."'),
+        verbose_name=_('Final voice label'),
+        help_text=_(
+            'The voice label that is played when the user has completed the recording process. Example: "Thank you for your message! The message has been stored successfully."'),
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -54,15 +60,14 @@ class Record(VoiceServiceElement):
     )
     input_category = models.ForeignKey(
         UserInputCategory,
-        verbose_name = _('Input category'),
-        help_text = _('The category under which the input will be stored in the system.'),
+        verbose_name=_('Input category'),
+        help_text=_('The category under which the input will be stored in the system.'),
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='input_category',
     )
-    max_time_input = models.IntegerField(_('Maximum time of message (seconds)'),default=180)
-
+    max_time_input = models.IntegerField(_('Maximum time of message (seconds)'), default=180)
 
     _redirect = models.ForeignKey(
         VoiceServiceElement,
@@ -70,7 +75,7 @@ class Record(VoiceServiceElement):
         null=True,
         blank=True,
         related_name='%(app_label)s_%(class)s_related',
-        verbose_name = _('Redirect element'),
+        verbose_name=_('Redirect element'),
         help_text=_("The element to redirect to after the message has been played."))
 
     class Meta:
@@ -93,6 +98,7 @@ class Record(VoiceServiceElement):
 
     def is_valid(self):
         return len(self.validator()) == 0
+
     is_valid.boolean = True
     is_valid.short_description = _('Is valid')
 
@@ -102,4 +108,3 @@ class Record(VoiceServiceElement):
         if not self._redirect:
             errors.append(ugettext('Record %s does not have a redirect element') % self.name)
         return errors
-

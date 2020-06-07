@@ -2,9 +2,10 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from vsdk.service_development.models import CallSession
+from vsdk.service_development.models import CallSession, get_object_or_404
 
 import logging
+
 logger = logging.getLogger("mada")
 
 
@@ -52,21 +53,43 @@ class ResultItem(models.Model):
             self.testing_confirmation)
 
 
-def create_result_item(session=None, symptom_no=None, risk_no=None, is_exposed=None, infected_probability=None,
-                       is_infected_prediction=None, testing_recommended=None):
+def update_is_exposed_for_session(session=None, is_exposed=None):
+    if session:
+        result_item = get_object_or_404(ResultItem, session=session)
+    else:
+        result_item = ResultItem.objects.create()
+        result_item.session = session
 
-    if session is None:
-        raise ValueError('Session ID missing for result item')
+    if not is_exposed:  # can be updated only if False
+        result_item.is_exposed = is_exposed
 
-    result_item = ResultItem.objects.create(
-        session=session,
-        symptom_no=symptom_no,
-        risk_no=risk_no,
-        is_exposed=is_exposed,
-        infected_probability=infected_probability,
-        is_infected_prediction=is_infected_prediction,
-        testing_recommended=testing_recommended
-    )
+    result_item.save()
+    return result_item
+
+
+def update_or_create_result_item_for_session(self, session=None, symptom_no=None, risk_no=None, is_exposed=None,
+                                             infected_probability=None, is_infected_prediction=None,
+                                             testing_recommended=None):
+    if session:
+        result_item = get_object_or_404(ResultItem, session=session)
+    else:
+        result_item = ResultItem.objects.create()
+        result_item.session = session
+
+    # set result fields
+    if symptom_no:
+        result_item.symptom_no = symptom_no
+    if risk_no:
+        result_item.risk_no = risk_no
+    if is_exposed:
+        result_item.is_exposed = is_exposed
+    if infected_probability:
+        result_item.infected_probability = infected_probability
+    if is_infected_prediction:
+        result_item.is_infected_prediction = is_infected_prediction
+    if testing_recommended:
+        result_item.testing_recommended = testing_recommended
+
     logger.debug("Saving result item - {}".format(result_item))
     result_item.save()
     return result_item

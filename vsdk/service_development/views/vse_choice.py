@@ -101,6 +101,8 @@ class ChoiceSelection(TemplateView):
                 logger.debug("Session user {}".format(session.user))
                 check_item = lookup_or_create_self_check_item(None, session, choice_element, is_confirmed)
                 logger.debug("Saved self-check item {}".format(check_item))
+                session_result = update_is_exposed_for_session(session, is_confirmed)
+                logger.debug("Updated exposure for result{}".format(session_result))
 
             return HttpResponseRedirect(request.POST['option_redirect'])
 

@@ -73,7 +73,7 @@ def message_presentation(request, element_id, session_id):
 
         # compare wavg and sympt no with configuration benchmarks
         diagnostic_params = DiagnosisConfigParameters.objects.all().first()
-        logger.debug("Configuration {}".format(diagnostic_params))
+        logger.debug("Retrieved configuration - {}".format(diagnostic_params))
 
         is_symptom_count_above_benchmark = symptoms_count > diagnostic_params.symptom_no_benchmark
         is_wavg_above_benchmark = symptoms__wavg > diagnostic_params.infected_probability_benchmark
@@ -83,11 +83,12 @@ def message_presentation(request, element_id, session_id):
         is_suspect = is_symptom_count_above_benchmark or is_wavg_above_benchmark
         logger.debug("Is suspect {}".format(is_suspect))
 
-        # create new result item TODO: also set is_exposed with the given user input
-        result_item = create_result_item(session, symptoms_count, risks_count, False, symptoms__wavg, is_suspect, is_suspect)
+        # create new result item
+        result_item = update_or_create_result_item_for_session(session, symptoms_count, risks_count, False, symptoms__wavg, is_suspect, is_suspect)
         logger.debug("Saved result {}".format(result_item))
 
         # TODO: play corresponding audios
+        #       treat is_exposed as a risk
         return render(request, 'retrieve_result.xml', context, content_type='text/xml')
 
     return render(request, 'message_presentation.xml', context, content_type='text/xml')
