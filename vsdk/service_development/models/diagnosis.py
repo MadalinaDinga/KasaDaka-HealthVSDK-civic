@@ -52,7 +52,7 @@ class ResultItem(models.Model):
         return _(
             'Result: %s, exposure: %s, symptoms: %s, risks: %s, infected prediction: %s, confirmed: %s, testing result: %s') % (
                    self.session,
-                   self.exposure,
+                   self.is_exposed,
                    self.symptom_no,
                    self.risk_no,
                    self.is_infected_prediction,
