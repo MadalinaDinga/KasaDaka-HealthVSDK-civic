@@ -148,7 +148,7 @@ def compute_result(session):
     for check in session_self_check_items_set:
         choice = check.choice_element
         logger.debug("Choice item {}".format(choice))
-        if choice.symptom and not choice.risk:  # process symptom
+        if choice.symptom and not choice.risk and not choice.symptom.is_severe:  # process non-severe symptom
             symptoms_count += 1
             sympt_id = choice.symptom.id
             logger.debug("Symptom details - name {} ID {}".format(choice.symptom.name, sympt_id))

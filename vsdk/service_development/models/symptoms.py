@@ -17,6 +17,10 @@ class Symptom(models.Model):
                                               validators=[MinValueValidator(0), MaxValueValidator(100)],
                                               help_text=_(
                                                   "The percentage of people with non-severe COVID-19 reporting the symptom."))
+    is_severe = models.BooleanField(
+        verbose_name=_('Is severe'),
+        help_text=_('Whether the symptom is considered severe.'),
+        default=False)
 
     @property
     def symptom_occurrence_percent(self):
