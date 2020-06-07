@@ -108,23 +108,3 @@ def update_or_create_result_item_for_session(session=None, symptom_no=None, risk
         result_item.save()
         return result_item
 
-
-class DiagnosisConfigParameters(models.Model):
-    """
-       An entity containing the diagnosis configurable parameters and infection prediction helpers.
-    """
-    infected_probability_benchmark = models.FloatField(null=True, blank=True,
-                                                       validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                       help_text=_(
-                                                           "Point of reference against which the infection probability is compared and conclusions may be drawn whether the person is infected or not."))
-    symptom_no_benchmark = models.PositiveIntegerField(null=True, blank=True,
-                                                       help_text=_(
-                                                           "Point of reference against which the number of reported symptoms per session is computed and conclusions may be drawn whether the person is infected or not."))
-
-    class Meta:
-        verbose_name_plural = _('Diagnosis Configurable Parameters')
-
-    def __str__(self):
-        return _('Infected probability benchmark: %s - symptoms count benchmark: %s') % (
-            self.infected_probability_benchmark, self.symptom_no_benchmark)
-

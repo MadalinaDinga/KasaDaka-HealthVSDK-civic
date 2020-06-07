@@ -10,5 +10,5 @@ from .user_input import *
 from .symptoms import *
 from .risks import *
 from .self_check_item import *
-from .diagnosis import *
-from .diagnosis_utils import *
+from .result import *
+from .result_config_utils import *

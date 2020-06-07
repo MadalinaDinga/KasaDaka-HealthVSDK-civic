@@ -253,7 +253,8 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
 
 class ResultItemAdmin(admin.ModelAdmin):
     list_display = (
-        'get_user', 'get_session_start_date', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
+        'get_user', 'get_session_start_date', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability',
+        'is_infected_prediction',
         'testing_recommended', 'testing_confirmation')
     readonly_fields = (
         'session', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
@@ -279,15 +280,17 @@ class ResultItemAdmin(admin.ModelAdmin):
     get_session_start_date.admin_order_field = 'session'
 
 
-class DiagnosisAdmin(admin.ModelAdmin):
-    list_display = ('infected_probability_benchmark', 'symptom_no_benchmark')
+class ResultConfigAdmin(admin.ModelAdmin):
+    list_display = ('infected_probability_benchmark', 'symptom_no_benchmark', 'result_negative_voice_label',
+                    'result_positive_voice_label', 'no_testing_voice_label', 'yes_testing_voice_label',
+                    'yes_risks_voice_label')
     can_delete = False
 
     def has_add_permission(self, request):
-        return False
+        return True
 
 
-# Register your models here.
+# Register your models here
 
 admin.site.register(VoiceService, VoiceServiceAdmin)
 admin.site.register(MessagePresentation, MessagePresentationAdmin)
@@ -303,4 +306,4 @@ admin.site.register(Symptom)
 admin.site.register(Risk)
 admin.site.register(SelfCheckItem, SelfCheckItemAdmin)
 admin.site.register(ResultItem, ResultItemAdmin)
-admin.site.register(DiagnosisConfigParameters, DiagnosisAdmin)
+admin.site.register(ResultConfig, ResultConfigAdmin)

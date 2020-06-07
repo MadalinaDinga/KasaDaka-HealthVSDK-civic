@@ -19,13 +19,17 @@ def message_presentation_generate_context(message_presentation_element, session)
     return context
 
 
-def message_presentation_generate_result_context(message_presentation_element, session, result_id):
-    language = session.language
-    message_voice_fragment_url_after_result = message_presentation_element.get_voice_fragment_url(language)
+def message_presentation_generate_result_context(message_presentation_element, is_infected_prediction,
+                                                 is_testing_recommended, has_risk, session):
+    result = ResultConfig.objects.all().first()
     redirect_url = message_presentation_get_redirect_url(message_presentation_element, session)
-    context = {'message_voice_fragment_url': message_voice_fragment_url_after_result,
-               'redirect_url': redirect_url,
-               'result': result_id}
+    context = {
+        'result': result,
+        'is_infected_prediction': is_infected_prediction,
+        'is_testing_recommended': is_testing_recommended,
+        'has_risk': has_risk,
+        'redirect_url': redirect_url
+    }
     return context
 
 
@@ -39,7 +43,9 @@ def message_presentation(request, element_id, session_id):
         result_item = compute_result(session)
         logger.debug("Saved result {}".format(result_item))
 
-        # TODO: play corresponding audios
+        context = message_presentation_generate_result_context(message_presentation_element,
+                                                               result_item.is_infected_prediction,
+                                                               result_item.testing_recommended, result_item.risk_no > 0)
         return render(request, 'retrieve_result.xml', context, content_type='text/xml')
 
     return render(request, 'message_presentation.xml', context, content_type='text/xml')

@@ -7,7 +7,7 @@ plays back a message, then sends the user to the redirect
 <form>
 <block>
 <prompt>
-<audio src="{{ message_voice_fragment_url }}"/>
+<audio src="{{ result.get_result_interface_voice_label_url_dict.result_negative_voice_label }}"/>
 </prompt>
 {% if redirect_url %}
 <goto next="{{ redirect_url }}"/>
