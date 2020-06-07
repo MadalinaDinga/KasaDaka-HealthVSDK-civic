@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from requests import HTTPError
 
 from vsdk.service_development.models import CallSession, get_object_or_404
 
@@ -54,17 +55,17 @@ class ResultItem(models.Model):
 
 
 def update_is_exposed_for_session(session=None, is_exposed=None):
-    if session:
+    try:
         result_item = get_object_or_404(ResultItem, session=session)
-    else:
+    except HTTPError as e:
+        print("Could not retrieve result for session - {e}", e)
         result_item = ResultItem.objects.create()
         result_item.session = session
-
-    if not is_exposed:  # can be updated only if False
-        result_item.is_exposed = is_exposed
-
-    result_item.save()
-    return result_item
+    finally:
+        if not is_exposed:  # can be updated only if False
+            result_item.is_exposed = is_exposed
+        result_item.save()
+        return result_item
 
 
 def update_or_create_result_item_for_session(self, session=None, symptom_no=None, risk_no=None, is_exposed=None,
