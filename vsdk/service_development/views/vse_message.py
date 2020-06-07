@@ -45,7 +45,8 @@ def message_presentation(request, element_id, session_id):
 
         context = message_presentation_generate_result_context(message_presentation_element,
                                                                result_item.is_infected_prediction,
-                                                               result_item.testing_recommended, result_item.risk_no > 0)
+                                                               result_item.testing_recommended, result_item.risk_no > 0,
+                                                               session)
         return render(request, 'retrieve_result.xml', context, content_type='text/xml')
 
     return render(request, 'message_presentation.xml', context, content_type='text/xml')
