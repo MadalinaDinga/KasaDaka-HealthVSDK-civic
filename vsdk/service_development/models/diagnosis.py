@@ -85,6 +85,7 @@ def update_or_create_result_item_for_session(session=None, symptom_no=None, risk
     result_item = None
     try:
         result_item = get_object_or_404(ResultItem, session=session)
+        logger.debug("Retrieved result item - {}".format(result_item))
     except Http404 as e:
         print("Could not retrieve result for session - {}".format(e))
         result_item = ResultItem.objects.create()  # create result item for session
