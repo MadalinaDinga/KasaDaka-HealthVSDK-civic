@@ -88,7 +88,6 @@ def message_presentation(request, element_id, session_id):
         logger.debug("Saved result {}".format(result_item))
 
         # TODO: play corresponding audios
-        #       treat is_exposed as a risk
         return render(request, 'retrieve_result.xml', context, content_type='text/xml')
 
     return render(request, 'message_presentation.xml', context, content_type='text/xml')
