@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from requests import HTTPError
 
@@ -48,25 +49,32 @@ class ResultItem(models.Model):
         verbose_name = _('Result Item')
 
     def __str__(self):
-        return _('Result: %s, infected prediction: %s, confirmed: %s, testing result: %s') % (
-            self.session, self.is_infected_prediction,
+        return _('Result: %s, exposure: %s, symptoms: %s, risks: %s, infected prediction: %s, confirmed: %s, testing result: %s') % (
+            self.session,
+            self.exposure,
+            self.symptom_no,
+            self.risk_no,
+            self.is_infected_prediction,
             self.testing_confirmation is not None,
-            self.testing_confirmation)
+            self.testing_confirmation,
+
+        )
 
 
 def update_is_exposed_for_session(session=None, is_exposed=None):
     result_item = None
     try:
         result_item = get_object_or_404(ResultItem, session=session)
-        logger.debug("Result item - {}".format(result_item))
-    except Exception as e:
-        print("Could not retrieve result for session - {e}", e)
+        logger.debug("Retrieved result item - {}".format(result_item))
+    except Http404 as e:
+        print("Could not retrieve result for session - {}".format(e))
         result_item = ResultItem.objects.create()  # create result item for session
         result_item.session = session
         logger.debug("Created new result item - {}".format(result_item))
     finally:
         if not result_item.is_exposed:  # can be updated only if False
             result_item.is_exposed = is_exposed
+            logger.debug("Is exposed is - {}".format(is_exposed))
         result_item.save()
         return result_item
 
@@ -77,9 +85,11 @@ def update_or_create_result_item_for_session(session=None, symptom_no=None, risk
     result_item = None
     try:
         result_item = get_object_or_404(ResultItem, session=session)
-    except HTTPError as e:
-        result_item = ResultItem.objects.create()
+    except Http404 as e:
+        print("Could not retrieve result for session - {}".format(e))
+        result_item = ResultItem.objects.create()  # create result item for session
         result_item.session = session
+        logger.debug("Created new result item - {}".format(result_item))
     finally:
         # set result fields
         if symptom_no:
