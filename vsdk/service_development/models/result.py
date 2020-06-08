@@ -21,8 +21,8 @@ class ResultItem(models.Model):
                                           verbose_name=_('Number of confirmed risk factors'),
                                           help_text=_("The number of reported risks."))
     is_exposed = models.BooleanField(
-        verbose_name=_('User was exposed'),
-        help_text=_("Whether the person has been exposed."),
+        verbose_name=_('Exposed'),
+        help_text=_("Whether the person has been exposed to the virus."),
         null=True, blank=True)
     infected_probability = models.FloatField(null=True, blank=True,
                                              validators=[MinValueValidator(0), MaxValueValidator(100)],
