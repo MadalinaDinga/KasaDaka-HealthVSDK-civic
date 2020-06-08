@@ -253,8 +253,8 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
 
 class ResultItemAdmin(admin.ModelAdmin):
     list_display = (
-        'get_user', 'get_session_start_date', 'is_infected_prediction', 'infected_probability', 'testing_recommended',
-        'testing_confirmation', 'is_exposed', 'symptom_no', 'risk_no')
+        'get_user', 'get_session_start_date', 'get_is_infected_prediction', 'get_infected_probability', 'get_testing_recommended',
+        'get_testing_confirmation', 'is_exposed', 'get_symptom_no', 'get_risk_no')
     readonly_fields = (
         'session', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
         'testing_recommended')
@@ -268,15 +268,47 @@ class ResultItemAdmin(admin.ModelAdmin):
             return "%s" % (str(obj.session.user))
         else:
             return "%s" % (str(obj.session.caller_id))
-
     get_user.short_description = 'User'
     get_user.admin_order_field = 'session'
 
     def get_session_start_date(self, obj):
         return obj.session.formatted_time
-
     get_session_start_date.short_description = 'Date'
     get_session_start_date.admin_order_field = 'session'
+
+    def get_testing_confirmation(self, obj):
+        return obj.testing_confirmation
+    get_testing_confirmation.short_description = mark_safe('Testing <br/> Confirmation')
+    get_testing_confirmation.admin_order_field = 'testing_confirmation'
+    get_testing_confirmation.boolean = True
+
+    def get_testing_recommended(self, obj):
+        return obj.testing_recommended
+    get_testing_recommended.short_description = mark_safe('Testing <br/> Recommended')
+    get_testing_recommended.admin_order_field = 'testing_recommended'
+    get_testing_recommended.boolean = True
+
+    def get_is_infected_prediction(self, obj):
+        return obj.is_infected_prediction
+    get_is_infected_prediction.short_description = mark_safe('Self-check <br/> result')
+    get_is_infected_prediction.admin_order_field = 'is_infected_prediction'
+    get_is_infected_prediction.boolean = True
+
+    def get_infected_probability(self, obj):
+        if obj.infected_probability:
+            return str(round(obj.infected_probability, 2))
+    get_infected_probability.short_description = mark_safe('Infection estimated <br/> probability')
+    get_infected_probability.admin_order_field = 'infected_probability'
+
+    def get_symptom_no(self, obj):
+        return obj.symptom_no
+    get_symptom_no.short_description = mark_safe('Number of reported <br/> symptoms')
+    get_symptom_no.admin_order_field = 'symptom_no'
+
+    def get_risk_no(self, obj):
+        return obj.risk_no
+    get_risk_no.short_description = mark_safe('Number of reported <br/> risk factors')
+    get_risk_no.admin_order_field = 'risk_no'
 
 
 class ResultConfigAdmin(admin.ModelAdmin):
