@@ -12,7 +12,7 @@ class ResultItem(models.Model):
     """
     A result is a message element, associated to a self-check session
     """
-    session = models.ForeignKey(CallSession, on_delete=models.CASCADE, related_name="session_result",
+    session = models.ForeignKey(CallSession, on_delete=models.PROTECT, related_name="session_result",
                                 verbose_name=_('Call session'), null=True, blank=True)
     symptom_no = models.PositiveIntegerField(null=True, blank=True,
                                              verbose_name=_('Number of confirmed symptoms'),
