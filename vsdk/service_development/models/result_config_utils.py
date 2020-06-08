@@ -22,7 +22,7 @@ class ResultConfig(models.Model):
                                                            "Point of reference against which the number of reported symptoms per session is computed and conclusions may be drawn whether the person is infected or not."))
 
     class Meta:
-        verbose_name_plural = _('Result Configuration')
+        verbose_name_plural = _('Diagnosis Configuration Parameters')
 
     def __str__(self):
         return _('Infected probability benchmark: %s - symptoms count benchmark: %s') % (
