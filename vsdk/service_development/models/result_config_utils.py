@@ -43,6 +43,7 @@ def process_symptoms_risks(session_self_check_items):
     for check in session_self_check_items:
         choice = check.choice_element
         logger.debug("Choice item {}".format(choice))
+
         if choice.symptom and not choice.symptom.is_severe and not choice.risk:  # process non-severe symptom
             if check.has_symptom:
                 nonsevere_symptoms_count += 1
