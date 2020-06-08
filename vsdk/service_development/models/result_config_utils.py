@@ -43,8 +43,9 @@ def process_symptoms_risks(session_self_check_items):
     for check in session_self_check_items:
         choice = check.choice_element
         logger.debug("Choice item {}".format(choice))
-        if choice.symptom and not choice.risk and not choice.symptom.is_severe:  # process non-severe symptom
-            nonsevere_symptoms_count += 1
+        if choice.symptom and not choice.symptom.is_severe and not choice.risk:  # process non-severe symptom
+            if check.has_symptom:
+                nonsevere_symptoms_count += 1
             sympt_id = choice.symptom.id
             logger.debug("Symptom details - name {} ID {}".format(choice.symptom.name, sympt_id))
 
@@ -54,7 +55,8 @@ def process_symptoms_risks(session_self_check_items):
             symptoms_wavg += int(check.has_symptom) * sympt_occurrence
 
         if not check.choice_element.symptom and check.choice_element.risk:  # process risk
-            risks_count += 1
+            if check.has_symptom:
+                risks_count += 1
 
     if nonsevere_symptoms_count > 0:
         symptoms_wavg /= symptoms__wavg_denominator
