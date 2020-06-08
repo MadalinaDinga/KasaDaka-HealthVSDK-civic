@@ -214,7 +214,7 @@ class SpokenUserInputAdmin(admin.ModelAdmin):
 class SelfCheckItemAdmin(admin.ModelAdmin):
     list_display = ('get_user', 'get_session_start_date', 'get_self_check_item_name', 'get_answer')
     readonly_fields = ('session', 'get_self_check_item_name', 'has_symptom', 'choice_element')
-    list_filter = ['choice_element__symptom', 'choice_element__risk']
+    list_filter = ['session__user', 'session__start', 'choice_element__symptom', 'choice_element__risk']
     can_delete = False
 
     def has_add_permission(self, request):

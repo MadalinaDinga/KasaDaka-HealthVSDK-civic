@@ -1,9 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.template import defaultfilters
 
 from . import KasaDakaUser
 from . import VoiceService, VoiceServiceElement
@@ -23,7 +22,6 @@ class CallSession(models.Model):
         verbose_name = _('Call Session')
 
     def __str__(self):
-        from django.template import defaultfilters
         start_date = defaultfilters.date(self.start, "SHORT_DATE_FORMAT")
         start_time = defaultfilters.time(self.start, "TIME_FORMAT")
         if self.user:
@@ -33,7 +31,6 @@ class CallSession(models.Model):
 
     @property
     def formatted_time(self):
-        from django.template import defaultfilters
         start_date = defaultfilters.date(self.start, "SHORT_DATE_FORMAT")
         start_time = defaultfilters.time(self.start, "TIME_FORMAT")
         return "%s %s" % (str(start_date), str(start_time))
