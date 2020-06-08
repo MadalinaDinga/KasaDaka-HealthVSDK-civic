@@ -30,7 +30,7 @@ class Symptom(models.Model):
         return (self._percentage_severe + self._percentage_nonsevere) / 2
 
     class Meta:
-        verbose_name = _('Symptom')
+        verbose_name_plural = _('Symptoms')
 
     def __str__(self):
         return _('Symptom: %s') % self.name

@@ -10,7 +10,7 @@ class Risk(models.Model):
     description = models.CharField(max_length=1000, blank=True)
 
     class Meta:
-        verbose_name = _('Risk')
+        verbose_name_plural = _('Risks')
 
     def __str__(self):
         return _('Risk: %s') % self.name

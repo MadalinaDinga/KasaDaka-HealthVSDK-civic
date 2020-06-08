@@ -43,7 +43,7 @@ class ResultItem(models.Model):
         null=True, blank=True)
 
     class Meta:
-        verbose_name = _('Result Item')
+        verbose_name_plural = _('Self-check results')
 
     def __str__(self):
         return _(
