@@ -253,9 +253,8 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
 
 class ResultItemAdmin(admin.ModelAdmin):
     list_display = (
-        'get_user', 'get_session_start_date', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability',
-        'is_infected_prediction',
-        'testing_recommended', 'testing_confirmation')
+        'get_user', 'get_session_start_date', 'is_infected_prediction', 'infected_probability', 'testing_recommended',
+        'testing_confirmation', 'is_exposed', 'symptom_no', 'risk_no')
     readonly_fields = (
         'session', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
         'testing_recommended')
