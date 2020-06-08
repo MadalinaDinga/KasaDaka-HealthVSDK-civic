@@ -38,7 +38,7 @@ class ResultItem(models.Model):
         help_text=_('Whether testing is recommended.'),
         null=True, blank=True)
     testing_confirmation = models.BooleanField(
-        verbose_name=_('Testing result'),
+        verbose_name=_('Predicted result was confirmed by testing'),
         help_text=_('Whether the person tested positive for COVID-19.'),
         null=True, blank=True)
 
