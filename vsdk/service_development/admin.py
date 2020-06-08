@@ -285,7 +285,7 @@ class ResultConfigAdmin(admin.ModelAdmin):
     can_delete = False
 
     def has_add_permission(self, request):
-        return True
+        return False
 
 
 # Register your models here

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from vsdk.service_development.models import CallSession, Choice
 
 import logging
+
 logger = logging.getLogger("mada")
 
 
