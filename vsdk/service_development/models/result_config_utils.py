@@ -49,10 +49,10 @@ def process_symptoms_risks(session_self_check_items):
                 sympt_id = choice.symptom.id
                 logger.debug("Symptom details - name {} ID {}".format(choice.symptom.name, sympt_id))
 
-                sympt_occurrence = get_object_or_404(Symptom, pk=sympt_id).symptom_occurrence_percent
-                symptoms__wavg_denominator += sympt_occurrence
-                logger.debug("Has symptom {}".format(check.has_symptom))
-                symptoms_wavg += int(check.has_symptom) * sympt_occurrence
+            logger.debug("Has symptom {}".format(check.has_symptom))
+            sympt_occurrence = get_object_or_404(Symptom, pk=sympt_id).symptom_occurrence_percent
+            symptoms__wavg_denominator += sympt_occurrence
+            symptoms_wavg += int(check.has_symptom) * sympt_occurrence
 
         if not check.choice_element.symptom and check.choice_element.risk:  # process risk
             if check.has_symptom:
