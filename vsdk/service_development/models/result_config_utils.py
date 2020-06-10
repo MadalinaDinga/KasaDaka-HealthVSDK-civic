@@ -45,9 +45,9 @@ def process_symptoms_risks(session_self_check_items):
         logger.debug("Choice item {}".format(choice))
 
         if choice.symptom and not choice.symptom.is_severe and not choice.risk:  # process non-severe symptom
+            sympt_id = choice.symptom.id
             if check.has_symptom:
                 nonsevere_symptoms_count += 1
-                sympt_id = choice.symptom.id
                 logger.debug("Symptom details - name {} ID {}".format(choice.symptom.name, sympt_id))
 
             logger.debug("Has symptom {}".format(check.has_symptom))
