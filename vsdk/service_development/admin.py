@@ -5,6 +5,10 @@ from django.utils.translation import ugettext_lazy as _
 from vsdk import settings
 from .models import *
 
+admin.site.site_header = "CIVIC Medical Desktop"
+admin.site.site_title = "CIVIC Medical Desktop"
+admin.site.index_title = "Welcome to CIVIC"
+
 
 def format_validation_result(obj):
     """
