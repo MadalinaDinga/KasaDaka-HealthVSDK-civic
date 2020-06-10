@@ -103,7 +103,9 @@ def compute_result(session):
     is_testing_recommended = is_suspect  # Recommend testing if there is a fair suspicion of having contacted the virus
 
     # save result information
-    result_item = update_or_create_result_item_for_session(session, symptoms_count, risks_count, False,
-                                                           symptoms_wavg,
-                                                           is_suspect, is_testing_recommended)
+    result_item = update_or_create_result_item_for_session(session=session, symptom_no=symptoms_count,
+                                                           risk_no=risks_count,
+                                                           infected_probability=symptoms_wavg,
+                                                           is_infected_prediction=is_suspect,
+                                                           testing_recommended=is_testing_recommended)
     return result_item

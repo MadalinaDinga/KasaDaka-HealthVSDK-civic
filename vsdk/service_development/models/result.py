@@ -95,13 +95,16 @@ def update_or_create_result_item_for_session(session=None, symptom_no=None, risk
             result_item.symptom_no = symptom_no
         if risk_no:
             result_item.risk_no = risk_no
-        if is_exposed:
+        if is_exposed is not None:
             result_item.is_exposed = is_exposed
-        if infected_probability:
+        if infected_probability is not None:
+            logger.debug("Set infection probability - {}".format(infected_probability))
             result_item.infected_probability = infected_probability
-        if is_infected_prediction:
+        if is_infected_prediction is not None:
+            logger.debug("Set infection prediction - {}".format(is_infected_prediction))
             result_item.is_infected_prediction = is_infected_prediction
-        if testing_recommended:
+        if testing_recommended is not None:
+            logger.debug("Set testing recommendation - {}".format(testing_recommended))
             result_item.testing_recommended = testing_recommended
 
         logger.debug("Saving result item - {}".format(result_item))
