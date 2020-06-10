@@ -8,15 +8,19 @@ class Symptom(models.Model):
     User that belongs to a Voice Service on this system
     """
     name = models.CharField(_('Name'), max_length=100)
-    description = models.CharField(max_length=1000, blank=True)
-    _percentage_severe = models.FloatField(null=True, blank=True,
-                                           validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                           help_text=_(
-                                               "The percentage of people with severe COVID-19 reporting the symptom."))
-    _percentage_nonsevere = models.FloatField(null=True, blank=True,
-                                              validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                              help_text=_(
-                                                  "The percentage of people with non-severe COVID-19 reporting the symptom."))
+    description = models.CharField(_('Description'), max_length=1000, blank=True)
+    _percentage_severe = models.FloatField(
+        _('Percentage severe'),
+        null=True, blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text=_(
+            "The percentage of people with severe COVID-19 reporting the symptom."))
+    _percentage_nonsevere = models.FloatField(
+        _('Percentage non-severe'),
+        null=True, blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text=_(
+            "The percentage of people with non-severe COVID-19 reporting the symptom."))
     is_severe = models.BooleanField(
         verbose_name=_('Is severe'),
         help_text=_('Whether the symptom is considered severe.'),
