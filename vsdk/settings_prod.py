@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'vsdk.service_development.apps.ServiceDevelopmentConfig',
     'storages',
+    'admin_reorder',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
     # TODO: disabled csrf middleware, is this usable with voiceXML?
     #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
