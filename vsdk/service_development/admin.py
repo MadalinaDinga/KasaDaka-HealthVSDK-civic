@@ -257,8 +257,8 @@ class SelfCheckItemAdmin(admin.ModelAdmin):
 
 class ResultItemAdmin(admin.ModelAdmin):
     list_display = (
-        'get_user', 'get_session_start_date', 'get_is_infected_prediction', 'get_infected_probability', 'get_testing_recommended',
-        'get_testing_confirmation', 'is_exposed', 'get_symptom_no', 'get_risk_no')
+        'get_user', 'get_session_start_date', 'get_is_infected_prediction', 'get_testing_confirmation', 'get_infected_probability', 'get_testing_recommended',
+        'is_exposed', 'get_symptom_no', 'get_risk_no')
     readonly_fields = (
         'session', 'is_exposed', 'symptom_no', 'risk_no', 'infected_probability', 'is_infected_prediction',
         'testing_recommended')
@@ -282,7 +282,7 @@ class ResultItemAdmin(admin.ModelAdmin):
 
     def get_testing_confirmation(self, obj):
         return obj.testing_confirmation
-    get_testing_confirmation.short_description = mark_safe('Testing <br/> Confirmation')
+    get_testing_confirmation.short_description = mark_safe('Diagnostic <br/> Confirmation')
     get_testing_confirmation.admin_order_field = 'testing_confirmation'
     get_testing_confirmation.boolean = True
 
@@ -293,10 +293,14 @@ class ResultItemAdmin(admin.ModelAdmin):
     get_testing_recommended.boolean = True
 
     def get_is_infected_prediction(self, obj):
-        return obj.is_infected_prediction
-    get_is_infected_prediction.short_description = mark_safe('Self-check <br/> result')
+        if obj.is_infected_prediction:
+            return "Positive"
+        else:
+            return "Negative"
+        #return obj.is_infected_prediction
+    get_is_infected_prediction.short_description = mark_safe('Predicted <br/> diagnostic')
     get_is_infected_prediction.admin_order_field = 'is_infected_prediction'
-    get_is_infected_prediction.boolean = True
+    # get_is_infected_prediction.boolean = True
 
     def get_infected_probability(self, obj):
         if obj.infected_probability:
